@@ -249,12 +249,18 @@
 .newtask-subtasks-section {
   margin-bottom: 24px;
 }
-
+.flex  {
+  input {
+    margin-bottom: 12px;
+  }
+ 
+}
 .subtask-input {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 12px;
+
 }
 
 .closeBtn {
@@ -300,6 +306,8 @@
   background-color: #635FC7;
   color: #FFFFFF;
 }
+
+
 
 
 /* irem bitis */
