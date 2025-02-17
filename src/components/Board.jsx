@@ -1,14 +1,13 @@
 import { useState, useRef, useContext } from "react";
-import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
+import { DownSvg, PlusSvg, SettingSvg, BoardSvg } from "../Svg";
 import { DataContext } from "../App"; // DataContext'i içe aktarın
 
 export default function Board() {
-  // Data'yı context'ten alıyoruz
   const data = useContext(DataContext);
-  // Eğer data henüz yüklenmediyse, yükleniyor mesajı veya boş bir render yapabilirsiniz
+
   if (!data) return <div>Loading...</div>;
 
-  // Data yapısındaki board listesini alıyoruz
+  // Data yapısındaki board listesi
   const boards = data.boards || [];
 
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +26,7 @@ export default function Board() {
   };
 
   const handleDialogClick = (e) => {
-    // Eğer tıklanan eleman dialog'un kendisiyse, dialog'u kapat
+    // Eğer tıklanan eleman dialog'un kendisiyse dialogu kapat
     if (e.target === dialogRef.current) {
       dialogRef.current.close();
       setIsOpen(false);
@@ -36,7 +35,7 @@ export default function Board() {
 
   const handleBoardClick = (boardName) => {
     setActiveBoard(boardName);
-    // Seçim yapıldığında dialog'u kapatalım
+    // Seçim yapıldığında dialogu kapat
     if (dialogRef.current) {
       dialogRef.current.close();
       setIsOpen(false);
@@ -72,23 +71,23 @@ export default function Board() {
           <dialog
             ref={dialogRef}
             className="dropdown-menu"
-            onClick={handleDialogClick}
-          >
+            onClick={handleDialogClick}>
             <p className="menu-title">All Boards ({boards.length})</p>
             <ul>
               {boards.map((board) => (
                 <li
                   key={board.id}
                   className={activeBoard === board.name ? "active" : ""}
-                  onClick={() => handleBoardClick(board.name)}
-                >
+                  onClick={() => handleBoardClick(board.name)}>
+                  <BoardSvg />
                   {board.name}
                 </li>
               ))}
-              <a href="#/new-board" className="new-board">
-                + Create New Board
-              </a>
             </ul>
+            <a href="#/new-board" className="new-board">
+              <BoardSvg />
+              + Create New Board
+            </a>
 
             {/* Dark Mode Toggle */}
             <div className="toggle-container">
@@ -115,13 +114,15 @@ export default function Board() {
       </header>
 
       {/* Board İçeriği: Seçilen boarda ait sütunlar ve task'lar */}
+      <div className="board-content">
       {currentBoard && (
+        
         <div className="board-columns">
           {currentBoard.columns.map((column) => (
             <div key={column.id} className="board-column">
               <h3>{column.name}</h3>
               <div className="tasks">
-                {column.tasks.map((task) =>  {
+              {column.tasks.map((task) =>  {
                  const activetasks = task.subtasks.filter(x => x.isCompleted).length;
                  console.log(activetasks); 
                return(
@@ -136,6 +137,7 @@ export default function Board() {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }
