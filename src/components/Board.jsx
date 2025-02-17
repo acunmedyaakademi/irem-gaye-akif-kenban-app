@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
 import { DataContext } from "../App";
 
