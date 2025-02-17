@@ -152,6 +152,123 @@ ul li:hover {
 /* Gaye Bitiş */
 
 
+/* irem baslangıc */
+
+.new-task-dialog-container {
+  padding: 24px;
+
+  h1 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22.68px;
+    letter-spacing: 0px;
+    margin-bottom: 24px;
+  }
+  h4 {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15.12px;
+    letter-spacing: 0px;
+    margin-bottom: 8px;
+  }
+
+  input {
+    background-color: inherit;
+    border: 1px solid #828FA340;
+    width: 100%;
+    padding: 8px 16px;
+  }
+  input::placeholder {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 0.25;
+
+  }
+  textarea {
+    background-color: inherit;
+    border: 1px solid #828FA340;
+    width: 100%;
+    padding: 8px 16px;
+  }
+
+  textarea::placeholder {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 0.25;
+  }
+}
+
+.newtask-title-section {
+  margin-bottom: 24px;
+}
+.newtask-description-section {
+  margin-bottom: 24px;
+}
+.newtask-subtasks-section {
+  margin-bottom: 24px;
+}
+
+.subtask-input {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.closeBtn {
+  background: inherit;
+  border: none;
+}
+
+.addnew-subtask-btn {
+  width: 100%;
+  padding-block: 8px;
+  border-radius: 20px;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #635FC7;
+
+}
+
+.newtask-status-section {
+  margin-bottom: 24px;
+  select {
+    width: 100%;
+    padding: 8px 16px;
+    background: inherit;
+    border: 1px solid #828FA340;
+    color: #FFFFFF;
+  }
+}
+
+.create-task-btn {
+  width: 100%;
+  padding-block: 8px;
+  border-radius: 20px;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+  background-color: #635FC7;
+  color: #FFFFFF;
+}
+
+
+/* irem bitis */
+
+
 
 /* Akif Başlangic */
 

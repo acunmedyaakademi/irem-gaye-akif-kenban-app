@@ -18,12 +18,21 @@ export default function NewTask() {
       </div>
       <div className="newtask-subtasks-section">
       <h4>Subtasks</h4>
+      <div className="subtask-input">
       <input type="text" placeholder="e.g. Make coffee" />
-       <button><img src="" alt="" /></button>
-      <input type="text" placeholder="e.g. Drink coffee & smile" />
-
+      <button className="closeBtn"><img src="/svg/close.svg" alt="" /></button>
       </div>
-
+       <button className="addnew-subtask-btn">+ Add New Subtask</button>
+      </div>
+      <div className="newtask-status-section">
+        <h4>Status</h4>
+        <select>
+          <option value="todo">Todo</option>
+          <option value="doing">Doing</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+      <button className="create-task-btn">Create Task</button>
     </div>
     </>
   )
