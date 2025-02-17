@@ -36,14 +36,6 @@ function App() {
 
   return (
     <>
-      <nav>
-        <ul>
-          <li><a href="#/">Home</a></li>
-          <li><a href="#/new-task">New Task</a></li>
-          <li><a href="#/new-board">New Board</a></li>
-        </ul>
-      </nav>
-
       <div className="app-container">
         <div className="page">
           <PageContext.Provider value={page}>

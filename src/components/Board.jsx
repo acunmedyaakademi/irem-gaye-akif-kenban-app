@@ -1,9 +1,26 @@
-import { useState } from "react";
-import { DownSvg } from "../Svg";
+import { useState, useRef } from "react";
+import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
 
 export default function Board() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [activeBoard, setActiveBoard] = useState("Platform Launch"); // Aktif board'ı tutacak state
+  const dialogRef = useRef(null);
+
+  const toggleDialog = () => {
+    setIsOpen(!isOpen);
+    if (dialogRef.current) {
+      if (!isOpen) {
+        dialogRef.current.showModal();
+      } else {
+        dialogRef.current.close();
+      }
+    }
+  };
+
+  const handleBoardClick = (boardName) => {
+    setActiveBoard(boardName); // Tıklanan board aktif olsun
+  };
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
@@ -13,39 +30,57 @@ export default function Board() {
           <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
         </div>
 
-        {/* Dropdown*/}
+        {/* Dropdown butonu */}
         <div className="dropdown">
-          <button onClick={() => setIsOpen(!isOpen)} className="dropdown-btn">
+          <button onClick={toggleDialog} className="dropdown-btn">
             <span>Platform Launch</span>
             <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
               <DownSvg />
             </span>
           </button>
 
-          {/* Dropdown Menü */}
-          {isOpen && (
-            <div className="dropdown-menu">
-              <p className="menu-title">All Boards (3)</p>
-              <ul>
-                <li className="active">Platform Launch</li>
-                <li>Marketing Plan</li>
-                <li>Roadmap</li>
-                <li className="new-board">+ Create New Board</li>
-              </ul>
+          {/* Dialog menüsü */}
+          <dialog ref={dialogRef} className="dropdown-menu">
+            <p className="menu-title">All Boards (3)</p>
+            <ul>
+              <li
+                className={activeBoard === "Platform Launch" ? "active" : ""}
+                onClick={() => handleBoardClick("Platform Launch")}>
+                Platform Launch
+              </li>
+              <li
+                className={activeBoard === "Marketing Plan" ? "active" : ""}
+                onClick={() => handleBoardClick("Marketing Plan")}>
+                Marketing Plan
+              </li>
+              <li
+                className={activeBoard === "Roadmap" ? "active" : ""}
+                onClick={() => handleBoardClick("Roadmap")}>
+                Roadmap
+              </li>
+              <a href="#/new-board" className="new-board">+ Create New Board</a>
+            </ul>
 
-              {/* Dark Mode Toggle */}
-              <div className="toggle-container">
-                <span className="icon"></span>
-                <button
-                  className={`toggle-btn ${isDarkMode ? "dark" : "light"}`}
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                >
-                  <span className="toggle-circle"></span>
-                </button>
-                <span className="icon"></span>
-              </div>
+            {/* Dark Mode Toggle */}
+            <div className="toggle-container">
+              <span className="icon"></span>
+              <button
+                className={`toggle-btn ${isDarkMode ? "dark" : "light"}`}
+                onClick={() => setIsDarkMode(!isDarkMode)}
+              >
+                <span className="toggle-circle"></span>
+              </button>
+              <span className="icon"></span>
             </div>
-          )}
+          </dialog>
+        </div>
+        <div className="btns-area">
+          <a href="#/new-task" className="plus-icon">
+            <PlusSvg />
+          </a>
+          <button className="setting-icon">
+            <SettingSvg />
+          </button>
         </div>
       </header>
     </div>
