@@ -4,22 +4,29 @@ import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
 export default function Board() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [activeBoard, setActiveBoard] = useState("Platform Launch"); // Aktif board'ı tutacak state
+  const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
 
   const toggleDialog = () => {
-    setIsOpen(!isOpen);
-    if (dialogRef.current) {
-      if (!isOpen) {
-        dialogRef.current.showModal();
-      } else {
-        dialogRef.current.close();
-      }
+    if (!isOpen) {
+      dialogRef.current.showModal();
+      setIsOpen(true);
+    } else {
+      dialogRef.current.close();
+      setIsOpen(false);
+    }
+  };
+
+  const handleDialogClick = (e) => {
+    // Eğer tıklanan eleman dialog'un kendisiyse (child değilse) kapat.
+    if (e.target === dialogRef.current) {
+      dialogRef.current.close();
+      setIsOpen(false);
     }
   };
 
   const handleBoardClick = (boardName) => {
-    setActiveBoard(boardName); // Tıklanan board aktif olsun
+    setActiveBoard(boardName);
   };
 
   return (
@@ -40,25 +47,34 @@ export default function Board() {
           </button>
 
           {/* Dialog menüsü */}
-          <dialog ref={dialogRef} className="dropdown-menu">
+          <dialog
+            ref={dialogRef}
+            className="dropdown-menu"
+            onClick={handleDialogClick}
+          >
             <p className="menu-title">All Boards (3)</p>
             <ul>
               <li
                 className={activeBoard === "Platform Launch" ? "active" : ""}
-                onClick={() => handleBoardClick("Platform Launch")}>
+                onClick={() => handleBoardClick("Platform Launch")}
+              >
                 Platform Launch
               </li>
               <li
                 className={activeBoard === "Marketing Plan" ? "active" : ""}
-                onClick={() => handleBoardClick("Marketing Plan")}>
+                onClick={() => handleBoardClick("Marketing Plan")}
+              >
                 Marketing Plan
               </li>
               <li
                 className={activeBoard === "Roadmap" ? "active" : ""}
-                onClick={() => handleBoardClick("Roadmap")}>
+                onClick={() => handleBoardClick("Roadmap")}
+              >
                 Roadmap
               </li>
-              <a href="#/new-board" className="new-board">+ Create New Board</a>
+              <a href="#/new-board" className="new-board">
+                + Create New Board
+              </a>
             </ul>
 
             {/* Dark Mode Toggle */}
@@ -74,6 +90,7 @@ export default function Board() {
             </div>
           </dialog>
         </div>
+
         <div className="btns-area">
           <a href="#/new-task" className="plus-icon">
             <PlusSvg />
