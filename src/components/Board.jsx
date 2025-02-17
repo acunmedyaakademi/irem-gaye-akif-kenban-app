@@ -1,17 +1,20 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
-import { DataContext } from "../App";
+import { DataContext } from "../App"; // DataContext'i içe aktarın
 
 export default function Board() {
+  // Data'yı context'ten alıyoruz
+  const data = useContext(DataContext);
+  // Eğer data henüz yüklenmediyse, yükleniyor mesajı veya boş bir render yapabilirsiniz
+  if (!data) return <div>Loading...</div>;
+
+  // Data yapısındaki board listesini alıyoruz
+  const boards = data.boards || [];
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
-  const data = useContext(DataContext);
-
-  if (!data) return <div>Loading...</div>;
-
-  const boards = data.boards || [];
 
   const toggleDialog = () => {
     if (!isOpen) {
@@ -24,7 +27,7 @@ export default function Board() {
   };
 
   const handleDialogClick = (e) => {
-    // Eğer tıklanan eleman dialog'un kendisiyse (child değilse) kapat.
+    // Eğer tıklanan eleman dialog'un kendisiyse, dialog'u kapat
     if (e.target === dialogRef.current) {
       dialogRef.current.close();
       setIsOpen(false);
@@ -33,7 +36,15 @@ export default function Board() {
 
   const handleBoardClick = (boardName) => {
     setActiveBoard(boardName);
+    // Seçim yapıldığında dialog'u kapatalım
+    if (dialogRef.current) {
+      dialogRef.current.close();
+      setIsOpen(false);
+    }
   };
+
+  // Seçilen boardun verisini alıyoruz
+  const currentBoard = boards.find((board) => board.name === activeBoard);
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
@@ -46,7 +57,7 @@ export default function Board() {
         {/* Dropdown butonu */}
         <div className="dropdown">
           <button onClick={toggleDialog} className="dropdown-btn">
-            <span>Platform Launch</span>
+            <span>{activeBoard}</span>
             <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
               <DownSvg />
             </span>
@@ -58,26 +69,17 @@ export default function Board() {
             className="dropdown-menu"
             onClick={handleDialogClick}
           >
-            <p className="menu-title">All Boards (3)</p>
+            <p className="menu-title">All Boards ({boards.length})</p>
             <ul>
-              <li
-                className={activeBoard === "Platform Launch" ? "active" : ""}
-                onClick={() => handleBoardClick("Platform Launch")}
-              >
-                Platform Launch
-              </li>
-              <li
-                className={activeBoard === "Marketing Plan" ? "active" : ""}
-                onClick={() => handleBoardClick("Marketing Plan")}
-              >
-                Marketing Plan
-              </li>
-              <li
-                className={activeBoard === "Roadmap" ? "active" : ""}
-                onClick={() => handleBoardClick("Roadmap")}
-              >
-                Roadmap
-              </li>
+              {boards.map((board) => (
+                <li
+                  key={board.id}
+                  className={activeBoard === board.name ? "active" : ""}
+                  onClick={() => handleBoardClick(board.name)}
+                >
+                  {board.name}
+                </li>
+              ))}
               <a href="#/new-board" className="new-board">
                 + Create New Board
               </a>
@@ -106,6 +108,36 @@ export default function Board() {
           </button>
         </div>
       </header>
+
+      {/* Board İçeriği: Seçilen boarda ait sütunlar ve task'lar */}
+      {currentBoard && (
+        <div className="board-columns">
+          {currentBoard.columns.map((column) => (
+            <div key={column.id} className="board-column">
+              <h3>{column.name}</h3>
+              <div className="tasks">
+                {column.tasks.map((task) => (
+                  <div key={task.id} className="task-card">
+                    <h4>{task.title}</h4>
+                    <p>{task.description}</p>
+                    {/* Alt task'ları listeleyelim */}
+                    {task.subtasks.map((subtask, index) => (
+                      <div key={index} className="subtask">
+                        <input
+                          type="checkbox"
+                          checked={subtask.isCompleted}
+                          readOnly
+                        />
+                        <span>{subtask.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
