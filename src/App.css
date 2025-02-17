@@ -1,0 +1,144 @@
+/* Gaye Başlangıç */
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2B2C37;
+  padding-inline: 16px;
+}
+
+.logo {
+  width: 25px;
+  height: 25px;
+  padding-block: 20px;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22.68px;
+  letter-spacing: 0px;
+  color: white;
+  cursor: pointer;
+  padding-block: 20px;
+  background-color: #2B2C37;
+  border: none;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 200px;
+  background-color: #222;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-title {
+  font-size: 12px;
+  color: gray;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+ul li {
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+ul li:hover {
+  background-color: #333;
+}
+
+.active {
+  background-color: #6c5ce7;
+  color: white;
+}
+
+.new-board {
+  color: #a29bfe;
+  cursor: pointer;
+}
+
+.new-board:hover {
+  color: #dfe6e9;
+}
+
+/* Toggle */
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.toggle-btn {
+  width: 40px;
+  height: 20px;
+  background-color: gray;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-btn.dark {
+  background-color: #6c5ce7;
+  justify-content: flex-end;
+}
+
+.toggle-btn.light {
+  background-color: gray;
+  justify-content: flex-start;
+}
+
+.toggle-circle {
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.empty-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  text-align: center;
+
+  h4 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22.68px;
+    letter-spacing: 0px;
+    color: #828FA3;
+    
+  }
+  
+  button {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18.9px;
+    letter-spacing: 0px;
+    color: white;
+    background-color: #635FC7;
+  }
+}
+
+/* Gaye Bitiş */
