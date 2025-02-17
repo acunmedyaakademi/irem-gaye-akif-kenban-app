@@ -42,6 +42,11 @@ export default function Board() {
       setIsOpen(false);
     }
   };
+  
+  // const subtasks = data.subtasks || [];
+  // const deneme = subtasks.filter(x => x.isCompleted != false)
+  // console.log(deneme);
+
 
   // Seçilen boardun verisini alıyoruz
   const currentBoard = boards.find((board) => board.name === activeBoard);
@@ -116,12 +121,16 @@ export default function Board() {
             <div key={column.id} className="board-column">
               <h3>{column.name}</h3>
               <div className="tasks">
-                {column.tasks.map((task) => (
+                {column.tasks.map((task) =>  {
+                 const activetasks = task.subtasks.filter(x => x.isCompleted).length;
+                 console.log(activetasks); 
+               return(
                   <div key={task.id} className="task-card">
                     <h4>{task.title}</h4>
-                    <h6>0 of {task.subtasks.length} subtasks</h6>
+                    <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
                   </div>
-                ))}
+               )
+              })}
               </div>
             </div>
           ))}
