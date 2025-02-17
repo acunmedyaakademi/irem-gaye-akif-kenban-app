@@ -1,5 +1,28 @@
 /* Gaye Başlangıç */
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16171F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3E3F4E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #635FC7;
+}
+
+* {
+  scrollbar-color: #3E3F4E #16171F;
+  scrollbar-width: thin;
+}
+
 /* Header */
 .header {
   position: sticky;
@@ -48,7 +71,6 @@
 }
 
 .dropdown-menu {
-  position: absolute;
   width: 264px;
   background-color: #2B2C37;
   border-radius: 8px;
