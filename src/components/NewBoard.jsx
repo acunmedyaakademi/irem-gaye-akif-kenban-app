@@ -17,9 +17,10 @@ export default function NewBoard() {
     setColumns(newColumns)
   }
 
-  function removeColumn(i,value) {
-    console.log(i);
-  }
+  const removeColumn = (index) => {
+    const newColumns = columns.filter((column, i) => i !== index);
+    setColumns(newColumns);
+  };
 
   return(
     <>
@@ -37,7 +38,7 @@ export default function NewBoard() {
           {columns.map((column, index) => (
             <div className="flex" key={index}>
               <input type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
-              <img onChange={removeColumn} src="/assets/images/cancel-icon.svg"/>
+              <img onClick={() => removeColumn(index)} src="/assets/images/cancel-icon.svg"/>
             </div>
           ))}
          </div>
