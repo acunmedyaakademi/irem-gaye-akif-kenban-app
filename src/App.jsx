@@ -9,7 +9,8 @@ export const PageContext = createContext();
 function App() {
   const [data, setData] = useState([]);
   const [url, setUrl] = useState(location.hash.substring(1) || "/");
-  const [activeLink, setActiveLink] = useState(url)
+  const [activeLink, setActiveLink] = useState(url);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1110);
 
   useEffect(() => {
     async function getData() {
@@ -29,6 +30,14 @@ function App() {
 
     window.addEventListener("hashchange", updateUrl);
     return () => window.removeEventListener("hashchange", updateUrl);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 1110);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const page = getPage(url);

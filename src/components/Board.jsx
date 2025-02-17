@@ -1,11 +1,29 @@
-import { useState, useRef, useContext } from "react";
-import { DownSvg, PlusSvg, SettingSvg, BoardSvg } from "../Svg";
+import { useState, useRef, useContext, useEffect } from "react";
+import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg } from "../Svg";
 import { DataContext } from "../App"; // DataContext'i içe aktarın
 
 export default function Board() {
   const data = useContext(DataContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
   if (!data) return <div>Loading...</div>;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Data yapısındaki board listesi
   const boards = data.boards || [];
@@ -41,11 +59,6 @@ export default function Board() {
       setIsOpen(false);
     }
   };
-  
-  // const subtasks = data.subtasks || [];
-  // const deneme = subtasks.filter(x => x.isCompleted != false)
-  // console.log(deneme);
-
 
   // Seçilen boardun verisini alıyoruz
   const currentBoard = boards.find((board) => board.name === activeBoard);
@@ -54,10 +67,19 @@ export default function Board() {
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       {/* Header */}
       <header className="header">
-        <div className="header-logo">
-          <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
+        <div className="header-logo-area">
+          <div className="header-logo">
+            <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
+          </div>
+          <div className="kanban-logo">
+            {isDesktop && <KanbanSvg />}
+          </div>
         </div>
+        {isDesktop &&
+          <div className="side-bar-menu-overlay">
 
+          </div>
+        }
         {/* Dropdown butonu */}
         <div className="dropdown">
           <button onClick={toggleDialog} className="dropdown-btn">
@@ -115,29 +137,29 @@ export default function Board() {
 
       {/* Board İçeriği: Seçilen boarda ait sütunlar ve task'lar */}
       <div className="board-content">
-      {currentBoard && (
-        
-        <div className="board-columns">
-          {currentBoard.columns.map((column) => (
-            <div key={column.id} className="board-column">
-              <h3>{column.name}</h3>
-              <div className="tasks">
-              {column.tasks.map((task) =>  {
-                 const activetasks = task.subtasks.filter(x => x.isCompleted).length;
-                 console.log(activetasks); 
-               return(
-                  <div key={task.id} className="task-card">
-                    <h4>{task.title}</h4>
-                    <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
-                  </div>
-               )
-              })}
+        {currentBoard && (
+
+          <div className="board-columns">
+            {currentBoard.columns.map((column) => (
+              <div key={column.id} className="board-column">
+                <h3>{column.name}</h3>
+                <div className="tasks">
+                  {column.tasks.map((task) => {
+                    const activetasks = task.subtasks.filter(x => x.isCompleted).length;
+                    console.log(activetasks);
+                    return (
+                      <div key={task.id} className="task-card">
+                        <h4>{task.title}</h4>
+                        <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

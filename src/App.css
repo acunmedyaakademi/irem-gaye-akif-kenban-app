@@ -554,3 +554,15 @@
 }
 
 /* Akif Bitiş */
+
+@media (width >= 768px) {
+  .header-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15.76px;
+  }
+}
+
+@media (width >= 1110px) {
+
+}
