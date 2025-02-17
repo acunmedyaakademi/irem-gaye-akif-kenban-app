@@ -4,7 +4,6 @@ import "/style/reset.css";
 import { getPage } from "./helper";
 
 export const DataContext = createContext();
-
 export const PageContext = createContext();
 
 function App() {
