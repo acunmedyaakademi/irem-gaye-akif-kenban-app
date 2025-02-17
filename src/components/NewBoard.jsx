@@ -1,6 +1,22 @@
+import { useState } from "react";
 import "/style/new-board.css";
 
 export default function NewBoard() {
+
+  const [columns,setColumns] = useState([]);
+  console.log(columns);
+
+  function addColumn() {
+    setColumns([...columns, ""]);
+    console.log(columns)
+  }
+
+  function handleAddColumn(i,value) {
+    const newColumns = [...columns];
+    newColumns[i] = value;
+    setColumns(newColumns)
+  }
+
   return(
     <>
     <div className="new-board-container">
@@ -14,14 +30,16 @@ export default function NewBoard() {
         </div>
         <div className="column-area">
           <label htmlFor="columns">Board Columns</label>
-          <div className="flex">
-            <input type="text" name="columns"/>
-            <img src="/assets/images/cancel-icon.svg"/>
-          </div>
-        </div>
+          {columns.map((column, index) => (
+            <div className="flex" key={index}>
+              <input type="text" name="columns" value={column} onChange={(e) => handleColumnChange(index, e.target.value)} />
+              <img src="/assets/images/cancel-icon.svg"/>
+            </div>
+          ))}
+         </div>
         <div className="button-area">
-        <button>+ Add New Column</button>
-        <button>Create New Board</button>
+        <button type="button" onClick={addColumn}>+ Add New Column</button>
+        <button type="button">Create New Board</button>
         </div>
       </form>
     </div>
