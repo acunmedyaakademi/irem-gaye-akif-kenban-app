@@ -2,6 +2,9 @@
 
 /* Header */
 .header {
+  position: sticky;
+  top: 0;
+  margin-bottom: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -380,6 +383,38 @@
   border: none;
   border-radius: 20px;
   margin-bottom: 24px;
+}
+
+
+.board-columns {
+  display: flex;
+  gap: 24px;
+  padding-inline: 16px;
+}
+
+.board-column h3 {
+  color: rgba(130, 143, 163, 1);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15.12px;
+  letter-spacing: 2.4px;
+  margin-bottom: 24px;
+}
+
+.task-card {
+  flex-direction: column;
+  padding: 23px 16px;
+  background-color: rgba(43, 44, 55, 1);
+  width: 280px;
+
+}
+
+.tasks {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
 }
 
 /* Akif Bitiş */

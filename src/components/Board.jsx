@@ -119,18 +119,7 @@ export default function Board() {
                 {column.tasks.map((task) => (
                   <div key={task.id} className="task-card">
                     <h4>{task.title}</h4>
-                    <p>{task.description}</p>
-                    {/* Alt task'ları listeleyelim */}
-                    {task.subtasks.map((subtask, index) => (
-                      <div key={index} className="subtask">
-                        <input
-                          type="checkbox"
-                          checked={subtask.isCompleted}
-                          readOnly
-                        />
-                        <span>{subtask.title}</span>
-                      </div>
-                    ))}
+                    <h6>0 of {task.subtasks.length} subtasks</h6>
                   </div>
                 ))}
               </div>
