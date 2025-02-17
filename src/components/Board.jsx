@@ -126,7 +126,7 @@ export default function Board() {
                  const activetasks = task.subtasks.filter(x => x.isCompleted).length;
                  console.log(activetasks); 
                return(
-                  <div key={task.id} className="task-card">
+                  <div onClick={() => window.location.hash = `/detail/${task.id}`} key={task.id} className="task-card">
                     <h4>{task.title}</h4>
                     <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
                   </div>
