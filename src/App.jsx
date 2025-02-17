@@ -3,7 +3,7 @@ import './App.css';
 import "/style/reset.css";
 import { getPage } from "./helper";
 
-
+export const DataContext = createContext();
 
 export const PageContext = createContext();
 
@@ -38,9 +38,9 @@ function App() {
     <>
       <div className="app-container">
         <div className="page">
-          <PageContext.Provider value={page}>
-            {page}
-          </PageContext.Provider>
+          <DataContext.Provider value={data}>
+            <PageContext.Provider value={page}>{page}</PageContext.Provider>
+          </DataContext.Provider>
         </div>
       </div>
     </>

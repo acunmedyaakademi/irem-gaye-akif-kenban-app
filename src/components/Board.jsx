@@ -1,11 +1,17 @@
 import { useState, useRef } from "react";
 import { DownSvg, PlusSvg, SettingSvg } from "../Svg";
+import { DataContext } from "../App";
 
 export default function Board() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
+  const data = useContext(DataContext);
+
+  if (!data) return <div>Loading...</div>;
+
+  const boards = data.boards || [];
 
   const toggleDialog = () => {
     if (!isOpen) {
