@@ -50,8 +50,9 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
-ul,ol {
+ul, ol {
   list-style: none;
+  padding: 0;
 }
 
 a {
