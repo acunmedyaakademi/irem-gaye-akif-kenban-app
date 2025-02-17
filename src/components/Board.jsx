@@ -17,7 +17,9 @@ export default function Board() {
         <div className="dropdown">
           <button onClick={() => setIsOpen(!isOpen)} className="dropdown-btn">
             <span>Platform Launch</span>
-            <DownSvg />
+            <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
+              <DownSvg />
+            </span>
           </button>
 
           {/* Dropdown Menü */}
