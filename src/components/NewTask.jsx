@@ -1,6 +1,26 @@
-import { useRef } from "react"
+import { useState } from "react";
+
 
 export default function NewTask() {
+
+  const [columns,setColumns] = useState([]);
+
+  function addColumn() {
+    setColumns([...columns, ""]);
+    console.log(columns)
+  }
+
+  function handleAddColumn(i,value) {
+    const newColumns = [...columns];
+    newColumns[i] = value;
+    setColumns(newColumns)
+  }
+
+  function removeColumn(i,value) {
+    console.log(i);
+  }
+
+
 
 
   return(
@@ -18,11 +38,18 @@ export default function NewTask() {
       </div>
       <div className="newtask-subtasks-section">
       <h4>Subtasks</h4>
+     
       <div className="subtask-input">
       <input type="text" placeholder="e.g. Make coffee" />
       <button className="closeBtn"><img src="/svg/close.svg" alt="" /></button>
       </div>
-       <button className="addnew-subtask-btn">+ Add New Subtask</button>
+      {columns.map((column, index) => (
+            <div className="flex" key={index}>
+              <input placeholder="e.g. Web Design" type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
+              <img onChange={removeColumn} src="/assets/images/cancel-icon.svg"/>
+            </div>
+          ))}
+       <button onClick={addColumn} className="addnew-subtask-btn">+ Add New Subtask</button>
       </div>
       <div className="newtask-status-section">
         <h4>Status</h4>
