@@ -32,7 +32,7 @@ export default function NewBoard() {
           <label htmlFor="columns">Board Columns</label>
           {columns.map((column, index) => (
             <div className="flex" key={index}>
-              <input type="text" name="columns" value={column} onChange={(e) => handleColumnChange(index, e.target.value)} />
+              <input type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
               <img src="/assets/images/cancel-icon.svg"/>
             </div>
           ))}
