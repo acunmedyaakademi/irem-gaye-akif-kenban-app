@@ -1,4 +1,5 @@
 import Board from "./components/Board";
+import Detail from "./components/Detail";
 import NewBoard from "./components/NewBoard";
 import NewTask from "./components/NewTask";
 
@@ -15,6 +16,10 @@ const routers = [
   {
     url: "/new-board",
     component: <NewBoard />,
+  },
+  {
+  url: "/detail",
+  component: <Detail />,
   },
 ];
 
