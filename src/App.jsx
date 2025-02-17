@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     async function getData() {
       const data = await fetch("data/data.json").then((r) => r.json());
-      setData(data);
+      setData(data.boards);
       console.log(data);
     }
     getData();
