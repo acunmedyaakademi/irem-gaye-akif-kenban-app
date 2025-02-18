@@ -1,11 +1,12 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg } from "../Svg";
+import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state'i
 
   if (!data) return <div>Loading...</div>;
 
@@ -44,7 +45,6 @@ export default function Board() {
   };
 
   const handleDialogClick = (e) => {
-    // Eğer tıklanan eleman dialog'un kendisiyse dialogu kapat
     if (e.target === dialogRef.current) {
       dialogRef.current.close();
       setIsOpen(false);
@@ -53,15 +53,18 @@ export default function Board() {
 
   const handleBoardClick = (boardName) => {
     setActiveBoard(boardName);
-    // Seçim yapıldığında dialogu kapat
     if (dialogRef.current) {
       dialogRef.current.close();
       setIsOpen(false);
     }
   };
 
-  // Seçilen boardun verisini alıyoruz
   const currentBoard = boards.find((board) => board.name === activeBoard);
+
+  // Sidebar toggle fonksiyonu
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
@@ -75,54 +78,59 @@ export default function Board() {
             {isDesktop && <KanbanSvg />}
           </div>
         </div>
-        {isDesktop &&
-          <div className="side-bar-menu-overlay">
 
+        {/* Sidebar Toggle Button */}
+        <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+          {isSidebarOpen ?( <><HideSidebarSvg  /><span>Hide Sidebar</span>
+          </>) : (<div className="open-sidebar">
+            <EyeSvg  /> 
+          </div>) }
+        </button>
+
+        <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+          {/* Sidebar İçeriği */}
+          <div className="dropdown">
+            <button onClick={toggleDialog} className="dropdown-btn">
+              <span>{activeBoard}</span>
+              <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
+                <DownSvg />
+              </span>
+            </button>
+
+            <dialog
+              ref={dialogRef}
+              className="dropdown-menu"
+              onClick={handleDialogClick}>
+              <p className="menu-title">All Boards ({boards.length})</p>
+              <ul>
+                {boards.map((board) => (
+                  <li
+                    key={board.id}
+                    className={activeBoard === board.name ? "active" : ""}
+                    onClick={() => handleBoardClick(board.name)}>
+                    <BoardSvg />
+                    {board.name}
+                  </li>
+                ))}
+              </ul>
+              <a href="#/new-board" className="new-board">
+                <BoardSvg />
+                + Create New Board
+              </a>
+
+              {/* Dark Mode Toggle */}
+              <div className="toggle-container">
+                <span className="icon"></span>
+                <button
+                  className={`toggle-btn ${isDarkMode ? "dark" : "light"}`}
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                >
+                  <span className="toggle-circle"></span>
+                </button>
+                <span className="icon"></span>
+              </div>
+            </dialog>
           </div>
-        }
-        {/* Dropdown butonu */}
-        <div className="dropdown">
-          <button onClick={toggleDialog} className="dropdown-btn">
-            <span>{activeBoard}</span>
-            <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
-              <DownSvg />
-            </span>
-          </button>
-
-          {/* Dialog menüsü */}
-          <dialog
-            ref={dialogRef}
-            className="dropdown-menu"
-            onClick={handleDialogClick}>
-            <p className="menu-title">All Boards ({boards.length})</p>
-            <ul>
-              {boards.map((board) => (
-                <li
-                  key={board.id}
-                  className={activeBoard === board.name ? "active" : ""}
-                  onClick={() => handleBoardClick(board.name)}>
-                  <BoardSvg />
-                  {board.name}
-                </li>
-              ))}
-            </ul>
-            <a href="#/new-board" className="new-board">
-              <BoardSvg />
-              + Create New Board
-            </a>
-
-            {/* Dark Mode Toggle */}
-            <div className="toggle-container">
-              <span className="icon"></span>
-              <button
-                className={`toggle-btn ${isDarkMode ? "dark" : "light"}`}
-                onClick={() => setIsDarkMode(!isDarkMode)}
-              >
-                <span className="toggle-circle"></span>
-              </button>
-              <span className="icon"></span>
-            </div>
-          </dialog>
         </div>
 
         <div className="btns-area">
@@ -135,10 +143,9 @@ export default function Board() {
         </div>
       </header>
 
-      {/* Board İçeriği: Seçilen boarda ait sütunlar ve task'lar */}
-      <div className="board-content">
+      {/* Board İçeriği */}
+      <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && (
-
           <div className="board-columns">
             {currentBoard.columns.map((column) => (
               <div key={column.id} className="board-column">
@@ -160,7 +167,6 @@ export default function Board() {
               <a href="#/new-column"><button>New Column</button></a>
             </div>
           </div>
-          
         )}
       </div>
     </div>
