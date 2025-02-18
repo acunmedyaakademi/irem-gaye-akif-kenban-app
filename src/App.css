@@ -380,6 +380,144 @@
 
 }
 
+.title-setting-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  button {
+    background: none;
+    background-color: inherit;
+    border: none;
+  }
+}
+
+.dropdown-wrapper {
+  position: relative; 
+  display: inline-block; 
+}
+
+.task-dropdown {
+  position: absolute;
+  top: 100%; 
+  transform: translateX(-50%);
+  background-color: #20212C;
+  border-radius: 8px;
+  padding: 8px 0;
+  width: 150px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.task-dropdown-item {
+  display: block;
+  width: 100%;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: #828FA3;
+  padding: 8px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.task-dropdown-item:hover {
+  background-color: #2B2C37;
+}
+
+.task-dropdown-item.delete {
+  color: #EA5555;
+}
+
+.task-dropdown-item.delete:hover {
+  background-color: rgba(234, 85, 85, 0.2);
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(22, 23, 31, 0.9); 
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  z-index: 1000;
+  padding-inline: 24px;
+}
+
+.delete-dialog {
+  background-color: #20212C;
+  padding: 24px;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 400px; /* Maksimum genişlik */
+}
+
+.delete-dialog h3 {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22.68px;
+  color: #EA5555;
+  margin-bottom: 24px;
+}
+
+.delete-dialog p {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: #828FA3;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.delete-dialog-delete {
+  background-color: #EA5555;
+  color: #FFFFFF;
+  padding-block: 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+
+
+}
+
+.delete-dialog-delete:hover {
+  background-color: #FF9898;
+}
+
+.delete-dialog-cancel {
+  background-color: white;
+  color: #635FC7;
+  padding-block: 8px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+
+}
+
+.delete-dialog-cancel:hover {
+  background-color: #D44343;
+}
+
+
 
 .detail-checkbox {
   display: flex;
