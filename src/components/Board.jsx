@@ -8,12 +8,13 @@ export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state'i
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state'i
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar durumu
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Ayarlar dropdown durumu
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Delete dialog durumu
 
   if (!data) return <div>Loading...</div>;
 
+  // Pencere boyutuna göre mobil/masaüstü ayarı
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -30,10 +31,10 @@ export default function Board() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Data yapısındaki board listesi
+  // Board listesi
   const boards = data.boards || [];
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); 
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
@@ -63,20 +64,29 @@ export default function Board() {
     }
   };
 
-  const openDeleteDialog = () => {
+  const currentBoard = boards.find((board) => board.name === activeBoard);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const onEdit = () => {
+    setEdit(true);
+  };
+
+  const onDelete = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  
-  const cancelDelete = () => {
+  const onConfirm = () => {
+    const updatedBoards = data.boards.filter((board) => board.name !== activeBoard);
+    setData({ ...data, boards: updatedBoards });
+    setActiveBoard(updatedBoards.length > 0 ? updatedBoards[0].name : "Platform Launch");
     setIsDeleteDialogOpen(false);
   };
 
-  const currentBoard = boards.find((board) => board.name === activeBoard);
-
-  // Sidebar toggle fonksiyonu
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const onCancel = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   return (
@@ -94,10 +104,16 @@ export default function Board() {
 
         {/* Sidebar Toggle Button */}
         <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
-          {isSidebarOpen ?( <><HideSidebarSvg  /><span>Hide Sidebar</span>
-          </>) : (<div className="open-sidebar">
-            <EyeSvg  /> 
-          </div>) }
+          {isSidebarOpen ? (
+            <>
+              <HideSidebarSvg />
+              <span>Hide Sidebar</span>
+            </>
+          ) : (
+            <div className="open-sidebar">
+              <EyeSvg />
+            </div>
+          )}
         </button>
 
         <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
@@ -113,14 +129,16 @@ export default function Board() {
             <dialog
               ref={dialogRef}
               className="dropdown-menu"
-              onClick={handleDialogClick}>
+              onClick={handleDialogClick}
+            >
               <p className="menu-title">All Boards ({boards.length})</p>
               <ul>
                 {boards.map((board) => (
                   <li
                     key={board.id}
                     className={activeBoard === board.name ? "active" : ""}
-                    onClick={() => handleBoardClick(board.name)}>
+                    onClick={() => handleBoardClick(board.name)}
+                  >
                     <BoardSvg />
                     {board.name}
                   </li>
@@ -150,31 +168,38 @@ export default function Board() {
           <a href="#/new-task" className="plus-icon">
             <PlusSvg />
           </a>
-          
-          {/* Setting Icon with Dropdown */}
+
           <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
-            <DropdownMenu />
+            <SettingSvg />
           </div>
+
+          {isDropdownOpen && (
+            <div className="task-dropdown">
+              <button className="task-dropdown-item" onClick={onEdit}>
+                Edit Board
+              </button>
+              <button className="task-dropdown-item delete" onClick={onDelete}>
+                Delete Board
+              </button>
+            </div>
+          )}
 
           {isDeleteDialogOpen && (
             <div className="dialog-overlay">
-            <div className="delete-dialog">
-              <h3>Delete this board?</h3>
-              <p>Are you sure you want to delete the board? This action cannot be undone.</p>
-              <div className="delete-dialog-actions">
-                <button className="delete-dialog-delete" onClick={onConfirm}>
-                  Delete
-                </button>
-                <button className="delete-dialog-cancel" onClick={onCancel}>
-                  Cancel
-                </button>
+              <div className="delete-dialog">
+                <h3>Delete this board?</h3>
+                <p>Are you sure you want to delete the board? This action cannot be undone.</p>
+                <div className="delete-dialog-actions">
+                  <button className="delete-dialog-delete" onClick={onConfirm}>
+                    Delete
+                  </button>
+                  <button className="delete-dialog-cancel" onClick={onCancel}>
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          
-        )}
-            
-          
+          )}
         </div>
       </header>
 
@@ -189,17 +214,25 @@ export default function Board() {
                   {column.tasks.map((task) => {
                     const activetasks = task.subtasks.filter(x => x.isCompleted).length;
                     return (
-                      <div onClick={() => window.location.hash = `/detail/${task.id}`} key={task.id} className="task-card">
+                      <div
+                        onClick={() => (window.location.hash = `/detail/${task.id}`)}
+                        key={task.id}
+                        className="task-card"
+                      >
                         <h4>{task.title}</h4>
-                        <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
+                        <h6>
+                          {activetasks} of {task.subtasks.length} subtasks
+                        </h6>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </div>
             ))}
             <div>
-              <a href="#/new-column"><button>New Column</button></a>
+              <a href="#/new-column">
+                <button>New Column</button>
+              </a>
             </div>
           </div>
         )}
