@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { DownSvg } from "../Svg";
+import { TaskContext } from "./TaskContext";
 
 export default function NewTask() {
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
 
   const [columns, setColumns] = useState([]);
   const [isOpen, setIsOpen] = useState(false); // dropdown menü için
@@ -30,9 +32,59 @@ export default function NewTask() {
     setColumns(newColumns);
   };
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formObj = Object.fromEntries(formData);
+
+    formObj.id = crypto.randomUUID();
+    formObj.upvotes = 0;
+    formObj.status = "Planned";
+    formObj.category = selectedCategory;
+    formObj.comments = [];
+
+    setFeedbacks((prevFeedbacks) => {
+      const updatedFeedbacks = [formObj, ...prevFeedbacks];
+      localStorage.setItem("feedbacks", JSON.stringify(updatedFeedbacks));
+      return updatedFeedbacks;
+    });
+
+    setCurrentFeedback(formObj);
+    window.location.hash = `#/`;
+    toast.success("Feedback added successfully!");
+  }
+
+  const updatedComments = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const formObj = Object.fromEntries(form);
+
+    const updatedFeedback = {
+      ...currentFeedback,
+      title: formObj.title || currentFeedback.title,
+      description: formObj.description || currentFeedback.description,
+      category: selectedCategory || currentFeedback.category,
+      status: selectedStatus || currentFeedback.status,
+    };
+
+    const updatedFeedbacks = feedbacks.map((inv) =>
+      inv.id === currentFeedback.id ? updatedFeedback : inv
+    );
+
+    setCurrentFeedback(updatedFeedback);
+    setFeedbacks(updatedFeedbacks);
+    localStorage.setItem("feedbacks", JSON.stringify(updatedFeedbacks));
+    setEdit(false);
+    setCurrentFeedback(null);
+    e.target.reset();
+
+    window.location.hash = "#/";
+    toast.success("Feedback updated successfully!");
+  };
+
   return (
     <>
-      <form autoComplete="off">
+      <form autoComplete="off" onSubmit={isEdit ? updatedComments : handleSubmit}>
         <div className="new-task-dialog-container">
           <h1>Add New Task</h1>
           <div className="newtask-title-section">

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "/style/new-board.css";
+import { TaskContext } from "./TaskContext";
 
 export default function NewBoard() {
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
 
-  const [columns,setColumns] = useState([]);
+  const [columns, setColumns] = useState([]);
   console.log(columns);
 
   function addColumn() {
@@ -11,7 +13,7 @@ export default function NewBoard() {
     console.log(columns)
   }
 
-  function handleAddColumn(i,value) {
+  function handleAddColumn(i, value) {
     const newColumns = [...columns];
     newColumns[i] = value;
     setColumns(newColumns)
@@ -22,32 +24,32 @@ export default function NewBoard() {
     setColumns(newColumns);
   };
 
-  return(
+  return (
     <>
-    <div className="new-board-container">
-      <h2>Add New Board</h2>
-      <form>
-        <div className="board-name-area">
-          <label htmlFor="name">Board Name</label>
-          <div>
-          <input type="text" name="name" placeholder="e.g. Web Design"/>
-          </div>
-        </div>
-        <div className="column-area">
-          <label htmlFor="columns">Board Columns</label>
-          {columns.map((column, index) => (
-            <div className="flex" key={index}>
-              <input type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
-              <img onClick={() => removeColumn(index)} src="/assets/images/cancel-icon.svg"/>
+      <div className="new-board-container">
+        <h2>Add New Board</h2>
+        <form>
+          <div className="board-name-area">
+            <label htmlFor="name">Board Name</label>
+            <div>
+              <input type="text" name="name" placeholder="e.g. Web Design" />
             </div>
-          ))}
-         </div>
-        <div className="button-area">
-        <button type="button" onClick={addColumn}>+ Add New Column</button>
-        <button type="button">Create New Board</button>
-        </div>
-      </form>
-    </div>
+          </div>
+          <div className="column-area">
+            <label htmlFor="columns">Board Columns</label>
+            {columns.map((column, index) => (
+              <div className="flex" key={index}>
+                <input type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
+                <img onClick={() => removeColumn(index)} src="/assets/images/cancel-icon.svg" />
+              </div>
+            ))}
+          </div>
+          <div className="button-area">
+            <button type="button" onClick={addColumn}>+ Add New Column</button>
+            <button type="button">Create New Board</button>
+          </div>
+        </form>
+      </div>
     </>
   )
 }

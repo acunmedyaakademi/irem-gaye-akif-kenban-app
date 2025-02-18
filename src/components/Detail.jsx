@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { DataContext } from "../App";
+import { TaskContext } from "./TaskContext";
 
 export default function Detail() {
-  const data = useContext(DataContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null); // seçilen taskı tutakn state
 
   useEffect(() => {
