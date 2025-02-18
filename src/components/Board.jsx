@@ -2,6 +2,7 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
+import DeleteDialog from "./DeleteDialog";
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
@@ -9,6 +10,7 @@ export default function Board() {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state'i
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state'i
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   if (!data) return <div>Loading...</div>;
 
@@ -59,6 +61,15 @@ export default function Board() {
       dialogRef.current.close();
       setIsOpen(false);
     }
+  };
+
+  const openDeleteDialog = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  
+  const cancelDelete = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const currentBoard = boards.find((board) => board.name === activeBoard);
@@ -141,11 +152,27 @@ export default function Board() {
           </a>
           
           {/* Setting Icon with Dropdown */}
-          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
-          <DropdownMenu  />
-          </button>
+          <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
+            <DropdownMenu />
+          </div>
 
-         
+          {isDeleteDialogOpen && (
+            <div className="dialog-overlay">
+            <div className="delete-dialog">
+              <h3>Delete this board?</h3>
+              <p>Are you sure you want to delete the board? This action cannot be undone.</p>
+              <div className="delete-dialog-actions">
+                <button className="delete-dialog-delete" onClick={onConfirm}>
+                  Delete
+                </button>
+                <button className="delete-dialog-cancel" onClick={onCancel}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        )}
             
           
         </div>
