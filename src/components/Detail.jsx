@@ -17,13 +17,11 @@ export default function Detail() {
   };
 
   const handleDelete = () => {
-    console.log("Delete Task clicked");
     setIsOpen(false);
     setIsDialogOpen(true);
   };
 
   const confirmDelete = () => {
-    console.log("Task deleted!");
 
     // Task'ı data'dan silme işlemi
     const taskId = selectedTask.id;
@@ -105,7 +103,6 @@ export default function Detail() {
         Subtasks ({selectedTask.subtasks.filter((subtask) => subtask.isCompleted).length}{" "}
         of {selectedTask.subtasks.length})
       </h2>
-
       <ul className="detail-checkbox-completed">
         {selectedTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
