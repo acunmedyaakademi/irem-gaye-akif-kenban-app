@@ -260,6 +260,7 @@
     letter-spacing: 0px;
     color: #FFFFFF;
     outline: none;
+    border-radius: 4px;
   }
   
   input::placeholder,
@@ -275,6 +276,55 @@
   input:focus, textarea:focus {
     border: 1px solid #635FC7;
   }
+}
+
+.newtask-status-section {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown {
+  position: relative;
+  background: #2B2C37;
+  border: 1px solid #828FA340;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+}
+
+.dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #20212C;
+  border-radius: 8px;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.dropdown-item {
+  cursor: pointer;
+  color: #828FA3;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #635FC7;
 }
 
 .newtask-title-section {
@@ -321,13 +371,6 @@
 
 .newtask-status-section {
   margin-bottom: 24px;
-  select {
-    width: 100%;
-    padding: 8px 16px;
-    background: inherit;
-    border: 1px solid #828FA340;
-    color: #FFFFFF;
-  }
   h4 {
     margin-bottom: 8px;
   }

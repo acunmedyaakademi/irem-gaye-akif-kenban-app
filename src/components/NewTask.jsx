@@ -1,9 +1,18 @@
 import { useState } from "react";
-
+import { DownSvg } from "../Svg";
 
 export default function NewTask() {
 
   const [columns, setColumns] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); // dropdown menü için
+  const [selectedStatus, setSelectedStatus] = useState("Todo"); // Varsayılan değer
+
+  const statuses = ["Todo", "Doing", "Done"];
+
+  const handleSelect = (status) => {
+    setSelectedStatus(status);
+    setIsOpen(false);
+  };
 
   function addColumn() {
     setColumns([...columns, ""]);
@@ -23,7 +32,7 @@ export default function NewTask() {
 
   return (
     <>
-      <form action="">
+      <form autoComplete="off">
         <div className="new-task-dialog-container">
           <h1>Add New Task</h1>
           <div className="newtask-title-section">
@@ -52,11 +61,27 @@ export default function NewTask() {
           </div>
           <div className="newtask-status-section">
             <h4>Status</h4>
-            <select>
-              <option value="todo">Todo</option>
-              <option value="doing">Doing</option>
-              <option value="done">Done</option>
-            </select>
+            <div className="dropdown">
+              <div className="dropdown-selected" onClick={() => setIsOpen(!isOpen)}>
+                {selectedStatus}
+                <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
+                  <DownSvg />
+                </span>
+              </div>
+              {isOpen && (
+                <div className="dropdown-menu">
+                  {statuses.map((status) => (
+                    <div
+                      key={status}
+                      className="dropdown-item"
+                      onClick={() => handleSelect(status)}
+                    >
+                      {status}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <button className="create-task-btn">Create Task</button>
         </div>
