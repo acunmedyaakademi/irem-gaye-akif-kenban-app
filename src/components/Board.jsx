@@ -146,7 +146,6 @@ export default function Board() {
                 <div className="tasks">
                   {column.tasks.map((task) => {
                     const activetasks = task.subtasks.filter(x => x.isCompleted).length;
-                    console.log(activetasks);
                     return (
                       <div onClick={() => window.location.hash = `/detail/${task.id}`} key={task.id} className="task-card">
                         <h4>{task.title}</h4>
@@ -157,7 +156,11 @@ export default function Board() {
                 </div>
               </div>
             ))}
+            <div>
+              <a href="#/new-column"><button>New Column</button></a>
+            </div>
           </div>
+          
         )}
       </div>
     </div>
