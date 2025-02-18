@@ -4,7 +4,7 @@ import { TaskContext } from "./TaskContext";
 
 export default function NewBoard() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
-
+  const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
   console.log(columns);
 
@@ -19,9 +19,22 @@ export default function NewBoard() {
     setColumns(newColumns)
   }
 
-  const removeColumn = (index) => {
+  function removeColumn(index) {
     const newColumns = columns.filter((column, i) => i !== index);
     setColumns(newColumns);
+  };
+
+  function createBoard() {
+    if (!boardName.trim()) return;
+    
+    const newBoard = {
+      id: Date.now(),
+      name: boardName,
+      columns: columns.map(name => ({ id: Date.now() + Math.random(), name, tasks: [] }))
+    };
+
+    setData({ ...data, boards: [...data.boards, newBoard] });
+    setActiveBoard(boardName);
   };
 
   return (
@@ -32,7 +45,7 @@ export default function NewBoard() {
           <div className="board-name-area">
             <label htmlFor="name">Board Name</label>
             <div>
-              <input type="text" name="name" placeholder="e.g. Web Design" />
+              <input type="text" name="name" placeholder="e.g. Web Design" value={boardName} onChange={(e) => setBoardName(e.target.value)} />
             </div>
           </div>
           <div className="column-area">
@@ -46,7 +59,7 @@ export default function NewBoard() {
           </div>
           <div className="button-area">
             <button type="button" onClick={addColumn}>+ Add New Column</button>
-            <button type="button">Create New Board</button>
+            <button type="button" onClick={createBoard}>Create New Board</button>
           </div>
         </form>
       </div>
