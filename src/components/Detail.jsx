@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { DataContext } from "../App";
 import { SettingSvg } from "../Svg";
+import { TaskContext } from "./TaskContext";
 
 export default function Detail() {
-  const data = useContext(DataContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isOpen, setIsOpen] = useState(false); // Dropdown menü state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
