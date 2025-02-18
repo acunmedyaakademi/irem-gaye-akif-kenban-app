@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
 import DeleteDialog from "./DeleteDialog";
@@ -7,6 +8,7 @@ import DropdownMenu from "./DropDownMenu";
 export default function Detail() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [isOpen,setIsOpen]= useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleEdit = () => {
