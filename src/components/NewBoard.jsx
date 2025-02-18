@@ -8,6 +8,10 @@ export default function NewBoard() {
   const [columns, setColumns] = useState([]);
   console.log(columns);
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   function addColumn() {
     setColumns([...columns, ""]);
     console.log(columns)
@@ -59,7 +63,7 @@ export default function NewBoard() {
           </div>
           <div className="button-area">
             <button type="button" onClick={addColumn}>+ Add New Column</button>
-            <button type="button" onClick={createBoard}>Create New Board</button>
+           <a href="#/" onSubmit={handleSubmit}><button type="button"onClick={createBoard}>Create New Board</button></a>
           </div>
         </form>
       </div>
