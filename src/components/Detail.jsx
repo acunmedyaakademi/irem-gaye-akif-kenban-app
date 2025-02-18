@@ -3,7 +3,7 @@ import { SettingSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
 export default function Detail() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isOpen, setIsOpen] = useState(false); // Dropdown menü state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -16,7 +16,7 @@ export default function Detail() {
   const handleDelete = () => {
     console.log("Delete Task clicked");
     setIsOpen(false);
-    setIsDialogOpen(true); 
+    setIsDialogOpen(true);
   };
 
   const confirmDelete = () => {
@@ -31,8 +31,8 @@ export default function Detail() {
         const taskIndex = column.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex !== -1) {
           column.tasks.splice(taskIndex, 1); // Task'ı sil
-          setSelectedTask(null); 
-          setIsDialogOpen(false); 
+          setSelectedTask(null);
+          setIsDialogOpen(false);
           window.location.hash = '/';
           return;
         }
@@ -41,7 +41,7 @@ export default function Detail() {
   };
 
   const cancelDelete = () => {
-    setIsDialogOpen(false); 
+    setIsDialogOpen(false);
   };
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function Detail() {
     <div className="detail-container">
       <div className="title-setting-section relative">
         <h1>{selectedTask.title}</h1>
-  
+
         <div className="dropdown-wrapper relative">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -79,7 +79,7 @@ export default function Detail() {
           >
             <SettingSvg />
           </button>
-  
+
           {isOpen && (
             <div className="task-dropdown">
               <button className="task-dropdown-item" onClick={handleEdit}>
@@ -110,14 +110,14 @@ export default function Detail() {
           </div>
         )}
       </div>
-  
+
       <p>{selectedTask.description || "No description"}</p>
-  
+
       <h2>
         Subtasks ({selectedTask.subtasks.filter((subtask) => subtask.isCompleted).length}{" "}
         of {selectedTask.subtasks.length})
       </h2>
-  
+
       <ul className="detail-checkbox-completed">
         {selectedTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
@@ -126,7 +126,7 @@ export default function Detail() {
           </div>
         ))}
       </ul>
-  
+
       <div className="newtask-status-section">
         <h4>Current Status</h4>
         <select defaultValue={selectedTask.status.toLowerCase()}>

@@ -3,7 +3,7 @@ import "/style/new-board.css";
 import { TaskContext } from "./TaskContext";
 
 export default function NewBoard() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
 
   const [columns, setColumns] = useState([]);
   console.log(columns);
