@@ -1,43 +1,51 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { DataContext } from "../App";
 
 export default function Detail() {
 
   const data = useContext(DataContext);
-  console.log(data)
+  console.log(data.boards)
 
-  const [ selectedTask, setSelectedTask ] = useState(null)
+  
 
-  return(
+  return (
     <>
-    <div className="detail-container">
-    <h1>Research pricing points of various competitors and trial different business models</h1>
-     <p>We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.</p>
-     <h2>Subtasks (2 of 3)</h2>
-      <ul className="detail-checkbox-completed">
-        <div className="detail-checkbox">
-        <input type="checkbox" />
-        <li>Research competitor pricing and business models</li>
-        </div>
-        <div className="detail-checkbox">
-          <input type="checkbox" />
-          <li>Outline a business model that works for our solution</li>
-          </div>
-          <div className="detail-checkbox">
-          <input type="checkbox" />
-          <li>Surveying and testing</li>
-          </div>
-      </ul>
-      <div className="newtask-status-section">
-        <h4>Current Status</h4>
-        <select>
-          <option value="todo">Todo</option>
-          <option value="doing">Doing</option>
-          <option value="done">Done</option>
-        </select>
-      </div>
-    </div>
-    
+      {data && data.boards ? (
+        data.boards.map(board => 
+          board.columns.map(column =>
+            column.tasks.map(task => (
+              <div key={task.id} className="detail-container">
+                <h1>{task.title}</h1>
+                <p>{task.description || "No description"}</p>
+                
+                <h2>Subtasks ({task.subtasks.filter(subtask => subtask.isCompleted).length} of {task.subtasks.length})</h2>
+                
+                <ul className="detail-checkbox-completed">
+                  {task.subtasks.map((subtask, index) => (
+                    <div key={index} className="detail-checkbox">
+                      <input type="checkbox" checked={subtask.isCompleted} readOnly />
+                      <li>{subtask.title}</li>
+                    </div>
+                  ))}
+                </ul>
+                
+                <div className="newtask-status-section">
+                  <h4>Current Status</h4>
+                  <select defaultValue={task.status.toLowerCase()}>
+                    <option value="todo">Todo</option>
+                    <option value="doing">Doing</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
+              </div>
+            ))
+          )
+        )
+      ) : (
+        <div>Loading...</div> 
+      )}
     </>
-  )
+  );
+  
 }
+

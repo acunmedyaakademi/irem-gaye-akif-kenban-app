@@ -137,29 +137,29 @@ export default function Board() {
 
       {/* Board İçeriği: Seçilen boarda ait sütunlar ve task'lar */}
       <div className="board-content">
-        {currentBoard && (
-
-          <div className="board-columns">
-            {currentBoard.columns.map((column) => (
-              <div key={column.id} className="board-column">
-                <h3>{column.name}</h3>
-                <div className="tasks">
-                  {column.tasks.map((task) => {
-                    const activetasks = task.subtasks.filter(x => x.isCompleted).length;
-                    console.log(activetasks);
-                    return (
-                      <div key={task.id} className="task-card">
-                        <h4>{task.title}</h4>
-                        <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
-                      </div>
-                    )
-                  })}
-                </div>
+      {currentBoard && (
+        
+        <div className="board-columns">
+          {currentBoard.columns.map((column) => (
+            <div key={column.id} className="board-column">
+              <h3>{column.name}</h3>
+              <div className="tasks">
+              {column.tasks.map((task) =>  {
+                 const activetasks = task.subtasks.filter(x => x.isCompleted).length;
+                 console.log(activetasks); 
+               return(
+                  <div onClick={() => window.location.hash = `/detail/${task.id}`} key={task.id} className="task-card">
+                    <h4>{task.title}</h4>
+                    <h6>{activetasks} of {task.subtasks.length} subtasks</h6>
+                  </div>
+               )
+              })}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
     </div>
   );
 }
