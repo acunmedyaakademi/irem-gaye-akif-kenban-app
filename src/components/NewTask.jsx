@@ -3,11 +3,20 @@ import { DownSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
 export default function NewTask() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard } = useContext(TaskContext);
 
-  const [columns, setColumns] = useState(currentTask ? currentTask.subtasks.map((st) => st.title) : []);
+  // Eğer activeBoard tanımlı değilse, veri içindeki ilk board'un adını kullanıyoruz.
+  const effectiveActiveBoard =
+    activeBoard ||
+    (data && data.boards && data.boards.length > 0 ? data.boards[0].name : "");
+
+  const [columns, setColumns] = useState(
+    currentTask ? currentTask.subtasks.map((st) => st.title) : []
+  );
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(currentTask ? currentTask.status : "Todo");
+  const [selectedStatus, setSelectedStatus] = useState(
+    currentTask ? currentTask.status : "Todo"
+  );
 
   const statuses = ["Todo", "Doing", "Done"];
 
@@ -32,55 +41,61 @@ export default function NewTask() {
     setColumns(newColumns);
   };
 
+  // Yeni görev ekleme fonksiyonu
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
 
-    formObj.id = crypto.randomUUID(); // Yeni görev için benzersiz bir id oluşturuyoruz
+    formObj.id = crypto.randomUUID(); // Yeni görev için benzersiz bir id
     formObj.subtasks = columns.map((title) => ({ title, isCompleted: false }));
     formObj.status = selectedStatus;
 
-    // Yeni task'ı mevcut board'a eklemek
     setData((prevData) => {
-      const newData = prevData && prevData.boards ? { ...prevData } : { boards: [] };
+      const newData =
+        prevData && prevData.boards ? { ...prevData } : { boards: [] };
 
-      // Aktif board'ı buluyoruz
       newData.boards = newData.boards.map((board) => {
-        if (board.name !== activeBoard) return board;
-
+        if (board.name !== effectiveActiveBoard) return board;
         return {
           ...board,
           columns: board.columns.map((col) => {
             if (col.name !== selectedStatus) return col;
-
             return {
               ...col,
-              tasks: [...(col.tasks || []), formObj], // Yeni görevi ilgili statüdeki column'a ekliyoruz
+              tasks: [...(col.tasks || []), formObj],
             };
           }),
         };
       });
 
-      // Yeni veriyi localStorage'a kaydediyoruz
       localStorage.setItem("taskData", JSON.stringify(newData));
       return newData;
     });
 
-    setCurrentTask(formObj);
+    // Formu sıfırlama işlemleri
+    setColumns([]);
+    setSelectedStatus("Todo");
+    setCurrentTask(null);
     window.location.hash = "#/";
   }
 
+
+  // Görev güncelleme fonksiyonu
   const updatedTasks = (e) => {
     e.preventDefault();
-    const form = new FormData(e.target);
-    const formObj = Object.fromEntries(form);
+    const formData = new FormData(e.target);
+    const formObj = Object.fromEntries(formData);
 
-    const updatedTask = {
+    // newTaskData: güncellenmiş görev nesnesi
+    const newTaskData = {
       ...currentTask,
       title: formObj.title || currentTask.title,
       description: formObj.description || currentTask.description,
-      subtasks: columns.length > 0 ? columns.map((title) => ({ title, isCompleted: false })) : currentTask.subtasks,
+      subtasks:
+        columns.length > 0
+          ? columns.map((title) => ({ title, isCompleted: false }))
+          : currentTask.subtasks,
       status: selectedStatus || currentTask.status,
     };
 
@@ -89,29 +104,26 @@ export default function NewTask() {
       const newData = { ...prevData };
 
       for (let board of newData.boards) {
-        if (board.name !== activeBoard) continue;
-
-        for (let column of board.columns) {
-          const taskIndex = column.tasks.findIndex((task) => task.id === currentTask.id);
+        if (board.name !== effectiveActiveBoard) continue;
+        for (let col of board.columns) {
+          const taskIndex = col.tasks.findIndex(
+            (task) => task.id === currentTask.id
+          );
           if (taskIndex !== -1) {
-            // Önce eski statüden görevi çıkar
-            const [updatedTask] = column.tasks.splice(taskIndex, 1);
-
-            // Yeni bilgileri güncelle
-            updatedTask.title = formObj.title || updatedTask.title;
-            updatedTask.description = formObj.description || updatedTask.description;
-            updatedTask.subtasks = columns.map((title) => ({ title, isCompleted: false }));
-            updatedTask.status = selectedStatus;
-
-            // Yeni statüye ekle
-            const newColumn = board.columns.find((col) => col.name === selectedStatus);
-            if (newColumn) newColumn.tasks.push(updatedTask);
+            // Eski görevi çıkarıyoruz
+            col.tasks.splice(taskIndex, 1);
+            // Yeni statüye uygun column'u buluyoruz
+            const targetColumn = board.columns.find(
+              (c) => c.name === selectedStatus
+            );
+            if (targetColumn) {
+              targetColumn.tasks.push(newTaskData);
+            }
             break;
           }
         }
       }
 
-      // Veriyi localStorage'a kaydediyoruz
       localStorage.setItem("taskData", JSON.stringify(newData));
       return newData;
     });
@@ -122,72 +134,77 @@ export default function NewTask() {
     window.location.hash = "#/";
   };
 
-
   return (
-    <>
-      <form autoComplete="off" onSubmit={(e) => (isEdit ? updatedTasks(e) : handleSubmit(e))}>
-        <div className="new-task-dialog-container">
-          <h1>{isEdit ? "Edit Task" : "Add New Task"}</h1>
-          <div className="newtask-title-section">
-            <h4>Title</h4>
-            <input
-              type="text"
-              defaultValue={currentTask ? currentTask.title : ""}
-              name="title"
-              placeholder="e.g. Take coffee break"
-            />
-          </div>
-          <div className="newtask-description-section">
-            <h4>Description</h4>
-            <textarea
-              name="description"
-              defaultValue={currentTask ? currentTask.description : ""}
-              placeholder="e.g. It’s always good to take a break."
-            ></textarea>
-          </div>
-          <div className="newtask-subtasks-section">
-            <h4>Subtasks</h4>
-            {columns.map((column, index) => (
-              <div className="flex" key={index}>
-                <input
-                  placeholder="e.g. Web Design"
-                  type="text"
-                  name="subtask"
-                  value={column}
-                  onChange={(e) => handleAddColumn(index, e.target.value)}
-                />
-                <img onClick={() => removeColumn(index)} src="/assets/images/cancel-icon.svg" alt="remove" />
-              </div>
-            ))}
-            <button onClick={addColumn} className="addnew-subtask-btn">
-              + Add New Subtask
-            </button>
-          </div>
-          <div className="newtask-status-section">
-            <h4>Status</h4>
-            <div className="dropdown">
-              <div className="dropdown-selected" onClick={() => setIsOpen(!isOpen)}>
-                {selectedStatus}
-                <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
-                  <DownSvg />
-                </span>
-              </div>
-              {isOpen && (
-                <div className="dropdown-menu">
-                  {statuses.map((status) => (
-                    <div key={status} className="dropdown-item" onClick={() => handleSelect(status)}>
-                      {status}
-                    </div>
-                  ))}
-                </div>
-              )}
+    <form autoComplete="off" onSubmit={(e) => (isEdit ? updatedTasks(e) : handleSubmit(e))}>
+      <div className="new-task-dialog-container">
+        <h1>{isEdit ? "Edit Task" : "Add New Task"}</h1>
+        <div className="newtask-title-section">
+          <h4>Title</h4>
+          <input
+            type="text"
+            defaultValue={currentTask ? currentTask.title : ""}
+            name="title"
+            placeholder="e.g. Take coffee break"
+          />
+        </div>
+        <div className="newtask-description-section">
+          <h4>Description</h4>
+          <textarea
+            name="description"
+            defaultValue={currentTask ? currentTask.description : ""}
+            placeholder="e.g. It’s always good to take a break."
+          ></textarea>
+        </div>
+        <div className="newtask-subtasks-section">
+          <h4>Subtasks</h4>
+          {columns.map((column, index) => (
+            <div className="flex" key={index}>
+              <input
+                placeholder="e.g. Web Design"
+                type="text"
+                name="subtask"
+                value={column}
+                onChange={(e) => handleAddColumn(index, e.target.value)}
+              />
+              <img
+                onClick={() => removeColumn(index)}
+                src="/assets/images/cancel-icon.svg"
+                alt="remove"
+              />
             </div>
-          </div>
-          <button className="create-task-btn">
-            {isEdit ? "Update Task" : "Create Task"}
+          ))}
+          <button onClick={addColumn} className="addnew-subtask-btn">
+            + Add New Subtask
           </button>
         </div>
-      </form>
-    </>
+        <div className="newtask-status-section">
+          <h4>Status</h4>
+          <div className="dropdown">
+            <div className="dropdown-selected" onClick={() => setIsOpen(!isOpen)}>
+              {selectedStatus}
+              <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
+                <DownSvg />
+              </span>
+            </div>
+            {isOpen && (
+              <div className="dropdown-menu">
+                {statuses.map((status) => (
+                  <div
+                    key={status}
+                    className="dropdown-item"
+                    onClick={() => handleSelect(status)}
+                  >
+                    {status}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <button className="create-task-btn">
+          {isEdit ? "Update Task" : "Create Task"}
+        </button>
+      </div>
+    </form>
   );
 }
