@@ -5,7 +5,7 @@ import DeleteDialog from "./DeleteDialog";
 import DropdownMenu from "./DropDownMenu";
 
 export default function Detail() {
-  const { data, setData } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -16,6 +16,7 @@ export default function Detail() {
 
   const handleDelete = () => {
     console.log("Delete Task clicked");
+    setIsOpen(false);
     setIsDialogOpen(true);
   };
 
@@ -70,7 +71,25 @@ export default function Detail() {
       <div className="title-setting-section relative">
         <h1>{selectedTask.title}</h1>
 
-        <DropdownMenu onEdit={handleEdit} onDelete={handleDelete} />
+        <div className="dropdown-wrapper relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="setting-icon"
+          >
+            <SettingSvg />
+          </button>
+
+          {isOpen && (
+            <div className="task-dropdown">
+              <button className="task-dropdown-item" onClick={handleEdit}>
+                Edit Task
+              </button>
+              <button className="task-dropdown-item delete" onClick={handleDelete}>
+                Delete Task
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Onay Diyaloğu */}
         {isDialogOpen && (

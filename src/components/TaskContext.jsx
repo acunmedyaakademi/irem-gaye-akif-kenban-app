@@ -6,6 +6,10 @@ export function TaskProvider({ children }) {
   const [data, setData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
+  const [activeBoard, setActiveBoard] = useState(() => {
+    return data?.boards?.length > 0 ? data.boards[0].name : "";
+  });
+
 
   // Sayfa yüklendiğinde `localStorage` kontrol et, yoksa `data.json`'dan al**
   useEffect(() => {
@@ -32,7 +36,7 @@ export function TaskProvider({ children }) {
 
   return (
     <TaskContext.Provider
-      value={{ data, setData, isEdit, setEdit, currentTask, setCurrentTask }}
+      value={{ data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard }}
     >
       {children}
     </TaskContext.Provider>
