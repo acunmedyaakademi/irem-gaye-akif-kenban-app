@@ -1,12 +1,14 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
+import DropdownMenu from "./DropDownMenu";
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state'i
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state'i
 
   if (!data) return <div>Loading...</div>;
 
@@ -137,9 +139,15 @@ export default function Board() {
           <a href="#/new-task" className="plus-icon">
             <PlusSvg />
           </a>
-          <button className="setting-icon">
-            <SettingSvg />
+          
+          {/* Setting Icon with Dropdown */}
+          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
+          <DropdownMenu  />
           </button>
+
+         
+            
+          
         </div>
       </header>
 

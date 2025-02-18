@@ -1,22 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { SettingSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
+import DeleteDialog from "./DeleteDialog";
+import DropdownMenu from "./DropDownMenu";
+
 export default function Detail() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
+  const { data, setData } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [isOpen, setIsOpen] = useState(false); // Dropdown menü state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleEdit = () => {
     console.log("Edit Task clicked");
-    setIsOpen(false);
+    setIsDialogOpen(false);
   };
 
   const handleDelete = () => {
     console.log("Delete Task clicked");
-    setIsOpen(false);
-    setIsDialogOpen(true); 
+    setIsDialogOpen(true);
   };
 
   const confirmDelete = () => {
@@ -25,14 +25,13 @@ export default function Detail() {
     // Task'ı data'dan silme işlemi
     const taskId = selectedTask.id;
 
-
     for (let board of data.boards) {
       for (let column of board.columns) {
         const taskIndex = column.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex !== -1) {
           column.tasks.splice(taskIndex, 1); // Task'ı sil
-          setSelectedTask(null); 
-          setIsDialogOpen(false); 
+          setSelectedTask(null);
+          setIsDialogOpen(false);
           window.location.hash = '/';
           return;
         }
@@ -41,11 +40,10 @@ export default function Detail() {
   };
 
   const cancelDelete = () => {
-    setIsDialogOpen(false); 
+    setIsDialogOpen(false);
   };
 
   useEffect(() => {
-    // URL'deki task id'ye erişmek için
     const taskId = window.location.hash.split("/").pop();
 
     if (data && data.boards) {
@@ -71,53 +69,22 @@ export default function Detail() {
     <div className="detail-container">
       <div className="title-setting-section relative">
         <h1>{selectedTask.title}</h1>
-  
-        <div className="dropdown-wrapper relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="setting-icon"
-          >
-            <SettingSvg />
-          </button>
-  
-          {isOpen && (
-            <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={handleEdit}>
-                Edit Task
-              </button>
-              <button className="task-dropdown-item delete" onClick={handleDelete}>
-                Delete Task
-              </button>
-            </div>
-          )}
-        </div>
+
+        <DropdownMenu onEdit={handleEdit} onDelete={handleDelete} />
 
         {/* Onay Diyaloğu */}
         {isDialogOpen && (
-          <div className="dialog-overlay">
-            <div className="delete-dialog">
-              <h3>Delete this task?</h3>
-              <p>Are you sure you want to delete the task? This action cannot be undone.</p>
-              <div className="delete-dialog-actions">
-                <button className="delete-dialog-delete" onClick={confirmDelete}>
-                  Delete
-                </button>
-                <button className="delete-dialog-cancel" onClick={cancelDelete}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+          <DeleteDialog onConfirm={confirmDelete} onCancel={cancelDelete} />
         )}
       </div>
-  
+
       <p>{selectedTask.description || "No description"}</p>
-  
+
       <h2>
         Subtasks ({selectedTask.subtasks.filter((subtask) => subtask.isCompleted).length}{" "}
         of {selectedTask.subtasks.length})
       </h2>
-  
+
       <ul className="detail-checkbox-completed">
         {selectedTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
@@ -126,7 +93,7 @@ export default function Detail() {
           </div>
         ))}
       </ul>
-  
+
       <div className="newtask-status-section">
         <h4>Current Status</h4>
         <select defaultValue={selectedTask.status.toLowerCase()}>
