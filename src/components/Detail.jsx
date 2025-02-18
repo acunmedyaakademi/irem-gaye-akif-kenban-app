@@ -8,13 +8,14 @@ import DropdownMenu from "./DropDownMenu";
 export default function Detail() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [isOpen,setIsOpen]= useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleEdit = () => {
-    console.log("Edit Task clicked");
-    setIsDialogOpen(false);
-  };
+  function handleEditDialog() {
+    setEdit(true);
+    setCurrentTask(selectedTask);
+    window.location.hash = "#/new-task";
+  }
 
   const handleDelete = () => {
     console.log("Delete Task clicked");
@@ -83,7 +84,7 @@ export default function Detail() {
 
           {isOpen && (
             <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={handleEdit}>
+              <button className="task-dropdown-item" onClick={handleEditDialog}>
                 Edit Task
               </button>
               <button className="task-dropdown-item delete" onClick={handleDelete}>
