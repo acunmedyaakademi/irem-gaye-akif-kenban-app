@@ -113,14 +113,15 @@ export default function Board() {
             <h3>{isDesktop && activeBoard}</h3>
           </div>
         </div>
-
+  
         <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
-          {!isSidebarOpen &&
-            <button className="open-sidebar">
+          {!isSidebarOpen && (
+            <span className="open-sidebar">
               <EyeSvg />
-            </button>}
+            </span>
+          )}
         </button>
-
+  
         <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
           <div className="dropdown">
             <button onClick={toggleDialog} className="dropdown-btn">
@@ -129,7 +130,7 @@ export default function Board() {
                 <DownSvg />
               </span>
             </button>
-
+  
             <dialog ref={dialogRef} className="dropdown-menu" onClick={handleDialogClick}>
               <p className="menu-title">All Boards ({boards.length})</p>
               <ul>
@@ -146,44 +147,42 @@ export default function Board() {
                   <span>+ Create New Board</span>
                 </a>
               </div>
-              <>
-                <button className="hide-sidebar">
-                  <HideSidebarSvg />
-                  <span>Hide Sidebar</span>
-                </button>
-              </>
+              <button className="hide-sidebar">
+                <HideSidebarSvg />
+                <span>Hide Sidebar</span>
+              </button>
             </dialog>
           </div>
         </div>
+  
         <div className="btns-area">
           <button
             className="plus-icon"
             onClick={() => {
-              setCurrentTask(null); // Yeni görev eklerken currentTask'ı sıfırlayın
-              setEdit(false); // Yeni görev eklemek için edit modunu false yapın
-              setIsNewTaskDialogOpen(true); // Yeni görev dialogunu aç
+              setCurrentTask(null);
+              setEdit(false);
+              setIsNewTaskDialogOpen(true);
             }}
           >
             <PlusSvg />
             {isDesktop && <span>Add New Task</span>}
           </button>
-
+  
           <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
             <SettingSvg />
           </div>
-
+  
           {isDropdownOpen && (
             <div className="task-dropdown">
               <button className="task-dropdown-item" onClick={() => setIsEditDialogOpen(true)}>
                 Edit Board
               </button>
-
               <button className="task-dropdown-item delete" onClick={onDelete}>
                 Delete Board
               </button>
             </div>
           )}
-
+  
           {isDeleteDialogOpen && (
             <div className="dialog-overlay">
               <div className="delete-dialog">
@@ -202,7 +201,7 @@ export default function Board() {
           )}
         </div>
       </header>
-
+  
       <EditBoardDialog
         isOpen={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}
@@ -211,8 +210,7 @@ export default function Board() {
         data={data}
         setData={setData}
       />
-
-      {/* Board İçeriği */}
+  
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
           <div key={currentBoard.id} className="board-columns">
@@ -235,10 +233,11 @@ export default function Board() {
               </div>
             ))}
           </div>
+        ) : (
+          <div className="empty-board-message">No columns available</div>
         )}
       </div>
-
-      {/* New Task Dialogu */}
+  
       {isNewTaskDialogOpen && (
         <div className="new-task-modal-overlay" onClick={() => setIsNewTaskDialogOpen(false)}>
           <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
@@ -246,8 +245,7 @@ export default function Board() {
           </div>
         </div>
       )}
-
-      {/* Task Detail Dialogu */}
+  
       {isDetailDialogOpen && (
         <div className="detail-modal-overlay" onClick={() => setIsDetailDialogOpen(false)}>
           <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
@@ -255,7 +253,6 @@ export default function Board() {
           </div>
         </div>
       )}
-
     </div>
-  );
+  );  
 }
