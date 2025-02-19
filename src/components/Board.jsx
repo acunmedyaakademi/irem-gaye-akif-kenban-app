@@ -6,6 +6,10 @@ import DeleteDialog from "./DeleteDialog";
 import EditBoardDialog from "./EditBoardDialog";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
+import { DndContext, closestCorners } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 
 export default function Board() {
@@ -100,7 +104,7 @@ export default function Board() {
   const openNewTaskDialog = () => {
     setIsNewTaskDialogOpen(true);
   };
-
+ 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <header className="header">
