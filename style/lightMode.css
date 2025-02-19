@@ -42,6 +42,11 @@ body.light {
   }
 }
 
+.light .new-column {
+  background-color: white;
+  border:1px dashed black;
+}
+
 .light .new-board-container {
   background-color: White;
 
@@ -166,4 +171,5 @@ body.light {
   .light .sidebar.open {
     border-right: 1px solid #E4EBFA;
   }
+  
 }

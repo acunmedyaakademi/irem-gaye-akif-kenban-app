@@ -838,6 +838,13 @@
   transform: translateX(135%);
 }
 
+.new-column {
+  background-color: rgba(43, 44, 55, 1);
+  padding-inline: 55.5px;
+  color: white;
+  border: 1px dashed black;
+}
+
 /* Akif Bitiş */
 
 @media (width >= 768px) {
@@ -864,11 +871,7 @@
     transform: translateX(-100%);
   }
 
-  .new-column {
-    background-color: rgba(43, 44, 55, 1);
-    padding-inline: 55.5px;
-    border: none;
-  }
+  
 
   .sidebar.open {
     transform: translateX(0);

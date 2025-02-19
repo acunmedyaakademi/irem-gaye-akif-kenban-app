@@ -21,6 +21,7 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isColumnDialogOpen,setIsColumnDialogOpen] = useState(false)
   const { theme, toggleTheme } = useTheme(); // Tema durumu
 
   if (!data) return <div>Loading...</div>;
