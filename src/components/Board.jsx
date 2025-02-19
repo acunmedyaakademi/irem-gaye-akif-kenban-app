@@ -4,6 +4,7 @@ import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
 import EditBoardDialog from "./EditBoardDialog";
+import NewColumn from "./NewColumn"; 
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 import { DndContext, closestCorners } from "@dnd-kit/core";
@@ -22,6 +23,7 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
 
   if (!data) return <div>Loading...</div>;
 
@@ -68,7 +70,7 @@ export default function Board() {
     }
   };
 
-  const currentBoard = boards.find((board) => board.name === activeBoard);
+  const currentBoard = boards.find((board) => board.name === activeBoard) || { columns: [] };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -81,6 +83,7 @@ export default function Board() {
   const onDelete = () => {
     setIsDeleteDialogOpen(true);
   };
+
 
   const onConfirm = () => {
     const updatedBoards = data.boards.filter((board) => board.name !== activeBoard);
@@ -104,7 +107,23 @@ export default function Board() {
   const openNewTaskDialog = () => {
     setIsNewTaskDialogOpen(true);
   };
- 
+
+  const openAddColumnDialog = () => {
+    setIsColumnDialogOpen(true);
+  }
+const addNewColumnToBoard = (newColumn) => {
+  const updatedBoards = data.boards.map((board) => {
+    if (board.name === activeBoard) {
+      return { ...board, columns: [...board.columns, newColumn] };
+    }
+    return board;
+  });
+
+  setData({ ...data, boards: updatedBoards });
+
+};
+
+
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <header className="header">
@@ -216,11 +235,13 @@ export default function Board() {
 
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
+          <>
           <div key={currentBoard.id} className="board-columns">
             {currentBoard.columns.map((column) => (
               <div key={column.id} className="board-column">
                 <h3>{column.name}</h3>
                 <div className="tasks">
+                  
                   {column.tasks.map((task) => {
                     const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
                     return (
@@ -231,11 +252,13 @@ export default function Board() {
                         </h6>
                       </div>
                     );
-                  })}
+                  })}       
                 </div>
               </div>
             ))}
+            <button onClick={openAddColumnDialog} className="new-column">NewColumn</button>
           </div>
+          </>
         ) : (
           <div className="empty-board-message">No columns available</div>
         )}
@@ -256,6 +279,15 @@ export default function Board() {
           </div>
         </div>
       )}
+
+      {isColumnDialogOpen && (
+        <div className="new-task-modal-overlay" onClick={() => setIsColumnDialogOpen(false)}>
+          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+            <NewColumn onClose={() => setIsColumnDialogOpen(false)} addNewColumnToBoard={addNewColumnToBoard} />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
