@@ -3,6 +3,7 @@ import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeS
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
+import EditBoardDialog from "./EditBoardDialog";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 
@@ -16,6 +17,7 @@ export default function Board() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   if (!data) return <div>Loading...</div>;
 
@@ -61,6 +63,13 @@ export default function Board() {
       setIsOpen(false);
     }
   };
+
+  const currentBoard = boards.find((board) => board.name === activeBoard);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const onEdit = () => {
     setEdit(true);
   };
@@ -80,8 +89,6 @@ export default function Board() {
     setIsDeleteDialogOpen(false);
   };
 
-  const currentBoard = boards.find((board) => board.name === activeBoard);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Task detail dialogunu açma fonksiyonu
   const openDetailDialog = (task) => {
@@ -167,9 +174,10 @@ export default function Board() {
 
           {isDropdownOpen && (
             <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={onEdit}>
+              <button className="task-dropdown-item" onClick={() => setIsEditDialogOpen(true)}>
                 Edit Board
               </button>
+
               <button className="task-dropdown-item delete" onClick={onDelete}>
                 Delete Board
               </button>
@@ -195,9 +203,19 @@ export default function Board() {
         </div>
       </header>
 
+      <EditBoardDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        activeBoard={activeBoard}
+        setActiveBoard={setActiveBoard}
+        data={data}
+        setData={setData}
+      />
+
+      {/* Board İçeriği */}
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
-        {currentBoard && (
-          <div className="board-columns">
+        {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
+          <div key={currentBoard.id} className="board-columns">
             {currentBoard.columns.map((column) => (
               <div key={column.id} className="board-column">
                 <h3>{column.name}</h3>
