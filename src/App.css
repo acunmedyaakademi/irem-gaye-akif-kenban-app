@@ -25,8 +25,6 @@
 
 /* Header */
 .header {
-  position: sticky;
-  top: 0;
   margin-bottom: 40px;
   display: flex;
   justify-content: space-between;
@@ -117,10 +115,6 @@
     line-height: 18.9px;
     letter-spacing: 0px;
   }
-
-  a:hover {
-    color: #dfe6e9;
-  }
 }
 
 .menu-title {
@@ -139,7 +133,7 @@
   color: #828FA3;
 }
 
-.dropdown-menu a.new-board {
+.dropdown-menu a {
   color: #635FC7;
 }
 
@@ -212,11 +206,16 @@
   align-items: center;
   gap: 16px;
 
-  a {
+  .plus-icon {
     background-color: #635FC7;
     border-radius: 24px;
     padding: 10px 18px;
     cursor: pointer;
+  }
+
+  .setting-icon {
+    cursor: pointer;
+    padding: 3px;
   }
 
   button {
@@ -226,13 +225,55 @@
   }
 }
 
+.detail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.detail-modal {
+  background-color: #2B2C37;
+  width: 343px;
+  padding: 24px 24.38px 32px 24px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.new-task-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.new-task-modal {
+  background-color: #2B2C37;
+  width: 343px;
+  height: auto;
+  padding: 24px 24.38px 32px 24px;
+  border-radius: 6px;
+  position: relative;
+}
+
 /* Gaye Bitiş */
 
 
 /* irem baslangıc */
 
 .new-task-dialog-container {
-  padding: 24px;
 
   h1 {
     font-weight: 700;
@@ -261,6 +302,7 @@
     color: #FFFFFF;
     outline: none;
     border-radius: 4px;
+    resize: none;
   }
   
   input::placeholder,
@@ -386,11 +428,6 @@
   color: #FFFFFF;
 }
 
-.detail-container {
-  background-color: #2B2C37;
-  padding: 24px;
-}
-
 .detail-container h1 {
   font-weight: 700;
   font-size: 18px;
@@ -423,22 +460,30 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  button {
-    background: none;
-    background-color: inherit;
-    border: none;
-  }
+
 }
 
 .dropdown-wrapper {
   position: relative; 
-  display: inline-block; 
+  display: inline-block;
+  button {
+    background: none;
+    background-color: inherit;
+    border: none;
+  } 
+}
+
+.detail-modal {
+  .task-dropdown {
+    top: 100%;
+    transform: translateX(-100%);
+  }
 }
 
 .task-dropdown {
   position: absolute;
-  top: 100%; 
-  transform: translateX(-50%);
+  top: 10%; 
+  transform: translateX(-20%);
   background-color: #20212C;
   border-radius: 8px;
   padding: 8px 0;
@@ -596,14 +641,7 @@
   display: none;
 }
 
-
-
-
-
-
 /* irem bitis */
-
-
 
 /* Akif Başlangic */
 
@@ -695,7 +733,7 @@
 }
 
 .board-content {
-  padding-left: 16px;
+  padding-left: 24px;
 }
 
 .board-columns {
@@ -758,86 +796,133 @@
     display: flex;
     align-items: center;
     gap: 15.76px;
+    padding-block: 28px;
   }
 
- .header {
-  height: 81px;
- }
-/* Sidebar */
-.sidebar {
-  position: fixed;
-  top: 80px;
-  left: 0;
-  height: 100%;
-  width: 260px;
-  background-color: #20212C;
-  transition: transform 0.3s ease;
-  transform: translateX(-100%); /* Başlangıçta gizli */
-}
+  .header {
+    border-bottom: 1px solid #3E3F4E;
+  }
 
-.sidebar.open {
-  transform: translateX(0); 
-}
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background-color: #2B2C37;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+  }
 
-.open-sidebar .sidebar-toggle-btn{
-  background-color: #635FC7;
+  .sidebar.open {
+    transform: translateX(0);
+    border-right: 1px solid #3E3F4E;
+  }
 
-}
+  .board-content {
+    transition: margin-left 0.3s ease;
+  }
+
+  .board-content.with-sidebar {
+    margin-left: 250px; 
+  }
+
+  .sidebar .dropdown-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #20212C;
+    color: white;
+    cursor: pointer;
+  }
+
+  .dropdown-menu {
+    width: 260px;
+    box-shadow: none;
+    border-radius: 0;
+
+    a {
+      padding-left: 0;
+    }
+  }
 
 
-.board-content {
-  transition: margin-left 0.3s ease;
-}
+  .sidebar .dropdown-menu {
+    display: block;
+    padding: 10px;
+    background-color: #2B2C37;
+    height: 100%;
+    border-right: 1px solid #3E3F4E;
+  }
 
-.board-content.with-sidebar {
-  margin-left: 250px; 
-}
-
-.sidebar .dropdown-btn {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  background-color: #20212C;
-  color: white;
-  cursor: pointer;
-}
-
-.sidebar .dropdown-menu {
-  display: block;
-  padding: 10px;
-  background-color: #20212C;
-  height: 100%;
-}
-
-.sidebar .dropdown-menu a {
-  color: #828FA3;
-  text-decoration: none;
-  display: block;
-  padding: 10px;
-}
-
-.sidebar .dropdown-menu a:hover {
-  background-color: #3C3F48;
-}
+  .new-board {
+    padding-left: 24px;
+    padding-top: 14px;
+    display: flex;
+    gap: 10px;
+  }
 
   .sidebar-toggle-btn {
+    display: block;
+  }
+
+  .sidebar.open .hide-sidebar {
+    background-color: red;
+  }
+
+  .open-sidebar {
+    background: none;
+    border: none;
     display: block;
     position: fixed;
     bottom: 32px;
     left: 0px; 
     background-color:#6c5ce7;
     color: white;
-    border: none;
     padding: 18px ;
     cursor: pointer;
     border-top-right-radius: 100px;
     border-bottom-right-radius: 100px;
-    z-index: 1000; /* Buton her zaman görünür olsun */
+    z-index: 1000;
   }
 
   .sidebar .dropdown-btn {
     display: none;
   }
+
+  /* gaye başlangıç */
+
+  .btns-area {
+    .plus-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 18.9px;
+      letter-spacing: 0px;
+      color: #fff;
+      padding: 15px 25px;
+    }
+  }
+
+  .task-dropdown {
+    transform: translateX(10%);
+  }
+
+  .active-board-name h3 {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 25.2px;
+    letter-spacing: 0px;
+    color: #fff;
+    padding-left: 24px;
+    border-left: 1px solid #3E3F4E;
+  }
+
+  /* gaye bitiş */
 }
 
 @media (width >= 1110px) {

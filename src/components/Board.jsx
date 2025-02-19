@@ -3,38 +3,36 @@ import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeS
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
+import Detail from "./Detail"; // Detail bileşenini dahil ettik
+import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
+
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar durumu
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Ayarlar dropdown durumu
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Delete dialog durumu
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
+  const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
 
   if (!data) return <div>Loading...</div>;
 
-  // Pencere boyutuna göre mobil/masaüstü ayarı
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Board listesi
   const boards = data.boards || [];
-
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
@@ -63,13 +61,6 @@ export default function Board() {
       setIsOpen(false);
     }
   };
-
-  const currentBoard = boards.find((board) => board.name === activeBoard);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   const onEdit = () => {
     setEdit(true);
   };
@@ -89,35 +80,41 @@ export default function Board() {
     setIsDeleteDialogOpen(false);
   };
 
+  const currentBoard = boards.find((board) => board.name === activeBoard);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  // Task detail dialogunu açma fonksiyonu
+  const openDetailDialog = (task) => {
+    setCurrentTask(task);
+    setIsDetailDialogOpen(true);
+  };
+
+  // Yeni görev dialogunu açma fonksiyonu
+  const openNewTaskDialog = () => {
+    setIsNewTaskDialogOpen(true);
+  };
+
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
-      {/* Header */}
       <header className="header">
         <div className="header-logo-area">
           <div className="header-logo">
             <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
           </div>
-          <div className="kanban-logo">
-            {isDesktop && <KanbanSvg />}
+          <div className="kanban-logo">{isDesktop && <KanbanSvg />}</div>
+          <div className="active-board-name">
+            <h3>{isDesktop && activeBoard}</h3>
           </div>
         </div>
 
-        {/* Sidebar Toggle Button */}
         <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
-          {isSidebarOpen ? (
-            <>
-              <HideSidebarSvg />
-              <span>Hide Sidebar</span>
-            </>
-          ) : (
-            <div className="open-sidebar">
+          {!isSidebarOpen &&
+            <button className="open-sidebar">
               <EyeSvg />
-            </div>
-          )}
+            </button>}
         </button>
 
         <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
-          {/* Sidebar İçeriği */}
           <div className="dropdown">
             <button onClick={toggleDialog} className="dropdown-btn">
               <span>{activeBoard}</span>
@@ -126,48 +123,43 @@ export default function Board() {
               </span>
             </button>
 
-            <dialog
-              ref={dialogRef}
-              className="dropdown-menu"
-              onClick={handleDialogClick}
-            >
+            <dialog ref={dialogRef} className="dropdown-menu" onClick={handleDialogClick}>
               <p className="menu-title">All Boards ({boards.length})</p>
               <ul>
                 {boards.map((board) => (
-                  <li
-                    key={board.id}
-                    className={activeBoard === board.name ? "active" : ""}
-                    onClick={() => handleBoardClick(board.name)}
-                  >
+                  <li key={board.id} className={activeBoard === board.name ? "active" : ""} onClick={() => handleBoardClick(board.name)}>
                     <BoardSvg />
                     {board.name}
                   </li>
                 ))}
               </ul>
-              <a href="#/new-board" className="new-board">
-                <BoardSvg />
-                + Create New Board
-              </a>
-
-              {/* Dark Mode Toggle */}
-              <div className="toggle-container">
-                <span className="icon"></span>
-                <button
-                  className={`toggle-btn ${isDarkMode ? "dark" : "light"}`}
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                >
-                  <span className="toggle-circle"></span>
-                </button>
-                <span className="icon"></span>
+              <div className="new-board">
+                <a href="#/new-board">
+                  <BoardSvg />
+                  <span>+ Create New Board</span>
+                </a>
               </div>
+              <>
+                <button className="hide-sidebar">
+                  <HideSidebarSvg />
+                  <span>Hide Sidebar</span>
+                </button>
+              </>
             </dialog>
           </div>
         </div>
-
         <div className="btns-area">
-          <a href="#/new-task" className="plus-icon">
+          <button
+            className="plus-icon"
+            onClick={() => {
+              setCurrentTask(null); // Yeni görev eklerken currentTask'ı sıfırlayın
+              setEdit(false); // Yeni görev eklemek için edit modunu false yapın
+              setIsNewTaskDialogOpen(true); // Yeni görev dialogunu aç
+            }}
+          >
             <PlusSvg />
-          </a>
+            {isDesktop && <span>Add New Task</span>}
+          </button>
 
           <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
             <SettingSvg />
@@ -203,7 +195,6 @@ export default function Board() {
         </div>
       </header>
 
-      {/* Board İçeriği */}
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && (
           <div className="board-columns">
@@ -212,13 +203,9 @@ export default function Board() {
                 <h3>{column.name}</h3>
                 <div className="tasks">
                   {column.tasks.map((task) => {
-                    const activetasks = task.subtasks.filter(x => x.isCompleted).length;
+                    const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
                     return (
-                      <div
-                        onClick={() => (window.location.hash = `/detail/${task.id}`)}
-                        key={task.id}
-                        className="task-card"
-                      >
+                      <div key={task.id} className="task-card" onClick={() => openDetailDialog(task)}>
                         <h4>{task.title}</h4>
                         <h6>
                           {activetasks} of {task.subtasks.length} subtasks
@@ -229,14 +216,28 @@ export default function Board() {
                 </div>
               </div>
             ))}
-            <div>
-              <a href="#/new-column">
-                <button>New Column</button>
-              </a>
-            </div>
           </div>
         )}
       </div>
+
+      {/* New Task Dialogu */}
+      {isNewTaskDialogOpen && (
+        <div className="new-task-modal-overlay" onClick={() => setIsNewTaskDialogOpen(false)}>
+          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+            <NewTask onClose={() => setIsNewTaskDialogOpen(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Task Detail Dialogu */}
+      {isDetailDialogOpen && (
+        <div className="detail-modal-overlay" onClick={() => setIsDetailDialogOpen(false)}>
+          <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
+            <Detail onClose={() => setIsDetailDialogOpen(false)} openNewTaskDialog={openNewTaskDialog} setIsDetailDialogOpen={setIsDetailDialogOpen} />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

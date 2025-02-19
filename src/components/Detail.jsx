@@ -1,86 +1,72 @@
-import { useContext, useEffect, useState } from "react";
-import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
+import { useContext, useState } from "react";
+import { SettingSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
-
 import DeleteDialog from "./DeleteDialog";
-import DropdownMenu from "./DropDownMenu";
 
-export default function Detail() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
-  const [selectedTask, setSelectedTask] = useState(null);
+export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOpen }) {
+  const { currentTask, setEdit, setCurrentTask, data, setData } = useContext(TaskContext);
   const [isOpen, setIsOpen] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isTaskDropdownOpen, setIsTaskDropdownOpen] = useState(false);
+
+  if (!currentTask) {
+    return <div>Loading...</div>;
+  }
+
+  // task detayda açılan dialog
+  const toggleDropdown = () => {
+    setIsTaskDropdownOpen(prevState => !prevState);
+  };
 
   function handleEditDialog() {
     setEdit(true);
-    setCurrentTask(selectedTask);
-    window.location.hash = "#/new-task";
+    setCurrentTask(currentTask);
+    setIsDetailDialogOpen(false); // Detail modalını kapatıyoruz
+    openNewTaskDialog(); // NewTask modalını açıyoruz
   }
 
-  const handleDelete = () => {
+  function handleDelete() {
     setIsOpen(false);
     setIsDialogOpen(true);
-  };
+  }
 
-  const confirmDelete = () => {
+  function confirmDelete() {
+    if (!currentTask) return;
 
-    // Task'ı data'dan silme işlemi
-    const taskId = selectedTask.id;
+    const taskId = currentTask.id;
+    const updatedData = { ...data };
 
-    for (let board of data.boards) {
+    for (let board of updatedData.boards) {
       for (let column of board.columns) {
         const taskIndex = column.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex !== -1) {
-          column.tasks.splice(taskIndex, 1); // Task'ı sil
-          setSelectedTask(null);
+          column.tasks.splice(taskIndex, 1);
+          setData(updatedData);
+          setCurrentTask(null);
           setIsDialogOpen(false);
-          window.location.hash = '/';
+          onClose(); // Modalı kapat
           return;
         }
       }
     }
-  };
+  }
 
-  const cancelDelete = () => {
+  function cancelDelete() {
     setIsDialogOpen(false);
-  };
-
-  useEffect(() => {
-    const taskId = window.location.hash.split("/").pop();
-
-    if (data && data.boards) {
-      for (let board of data.boards) {
-        for (let column of board.columns) {
-          const foundTask = column.tasks.find(
-            (task) => task.id.toString() === taskId
-          );
-          if (foundTask) {
-            setSelectedTask(foundTask);
-            return;
-          }
-        }
-      }
-    }
-  }, [data]);
-
-  if (!selectedTask) {
-    return <div>Loading...</div>;
   }
 
   return (
     <div className="detail-container">
+
       <div className="title-setting-section relative">
-        <h1>{selectedTask.title}</h1>
+        <h1>{currentTask.title}</h1>
 
         <div className="dropdown-wrapper relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="setting-icon"
-          >
+          <button onClick={toggleDropdown} className="setting-icon">
             <SettingSvg />
           </button>
 
-          {isOpen && (
+          {isTaskDropdownOpen && (
             <div className="task-dropdown">
               <button className="task-dropdown-item" onClick={handleEditDialog}>
                 Edit Task
@@ -92,20 +78,17 @@ export default function Detail() {
           )}
         </div>
 
-        {/* Onay Diyaloğu */}
-        {isDialogOpen && (
-          <DeleteDialog onConfirm={confirmDelete} onCancel={cancelDelete} />
-        )}
+        {isDialogOpen && <DeleteDialog onConfirm={confirmDelete} onCancel={cancelDelete} />}
       </div>
 
-      <p>{selectedTask.description || "No description"}</p>
+      <p>{currentTask.description || "No description"}</p>
 
       <h2>
-        Subtasks ({selectedTask.subtasks.filter((subtask) => subtask.isCompleted).length}{" "}
-        of {selectedTask.subtasks.length})
+        Subtasks ({currentTask.subtasks.filter((subtask) => subtask.isCompleted).length} of{" "}
+        {currentTask.subtasks.length})
       </h2>
       <ul className="detail-checkbox-completed">
-        {selectedTask.subtasks.map((subtask, index) => (
+        {currentTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
             <input type="checkbox" checked={subtask.isCompleted} readOnly />
             <li>{subtask.title}</li>
@@ -115,7 +98,7 @@ export default function Detail() {
 
       <div className="newtask-status-section">
         <h4>Current Status</h4>
-        <select defaultValue={selectedTask.status.toLowerCase()}>
+        <select defaultValue={currentTask.status.toLowerCase()}>
           <option value="todo">Todo</option>
           <option value="doing">Doing</option>
           <option value="done">Done</option>

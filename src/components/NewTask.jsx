@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { DownSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 
-export default function NewTask() {
+export default function NewTask({ onClose }) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard } = useContext(TaskContext);
 
   // Eğer activeBoard tanımlı değilse, veri içindeki ilk board'un adını kullanıyoruz.
@@ -77,9 +77,8 @@ export default function NewTask() {
     setColumns([]);
     setSelectedStatus("Todo");
     setCurrentTask(null);
-    window.location.hash = "#/";
+    onClose(); // Modalı kapat
   }
-
 
   // Görev güncelleme fonksiyonu
   const updatedTasks = (e) => {
@@ -131,7 +130,8 @@ export default function NewTask() {
     setEdit(false);
     setCurrentTask(null);
     e.target.reset();
-    window.location.hash = "#/";
+    // Modalı kapatma işlemi
+    onClose();
   };
 
   return (

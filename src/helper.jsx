@@ -1,8 +1,6 @@
 import Board from "./components/Board";
-import Detail from "./components/Detail";
 import NewBoard from "./components/NewBoard";
 import NewColumn from "./components/NewColumn";
-import NewTask from "./components/NewTask";
 
 
 const routers = [
@@ -11,22 +9,14 @@ const routers = [
     component: <Board />,
   },
   {
-    url: "/new-task",
-    component: <NewTask />,
-  },
-  {
     url: "/new-board",
     component: <NewBoard />,
   },
   {
-  url: "/detail",
-  component: <Detail />,
-  },
-  {
     url: "/new-column",
     component: <NewColumn />,
-    },
-  
+  },
+
 ];
 
 export function getPage(url) {
