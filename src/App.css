@@ -637,7 +637,7 @@
   margin-bottom: 24px;
 }
 
-.sidebar-toggle-btn {
+.sidebar.open .sidebar-toggle-btn {
   display: none;
 }
 
@@ -865,16 +865,8 @@
 
   .sidebar-toggle-btn {
     display: block;
-  }
-
-  .sidebar.open .hide-sidebar {
-    background-color: red;
-  }
-
-  .open-sidebar {
     background: none;
     border: none;
-    display: block;
     position: fixed;
     bottom: 32px;
     left: 0px; 
@@ -885,6 +877,19 @@
     border-top-right-radius: 100px;
     border-bottom-right-radius: 100px;
     z-index: 1000;
+  }
+  
+  .sidebar.open .sidebar-toggle-btn {
+    display: none; /* Sidebar açıldığında göz ikonu kayboluyor */
+  }
+
+  .sidebar.open .hide-sidebar {
+    display: block;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px;
   }
 
   .sidebar .dropdown-btn {
