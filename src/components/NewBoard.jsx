@@ -30,7 +30,7 @@ export default function NewBoard() {
 
   function createBoard() {
     if (!boardName.trim()) return;
-    
+
     const newBoard = {
       id: Date.now(),
       name: boardName,
@@ -63,7 +63,7 @@ export default function NewBoard() {
           </div>
           <div className="button-area">
             <button type="button" onClick={addColumn}>+ Add New Column</button>
-           <a href="#/" onSubmit={handleSubmit}><button type="button"onClick={createBoard}>Create New Board</button></a>
+            <a href="#/" onSubmit={handleSubmit}><button type="button" onClick={createBoard}>Create New Board</button></a>
           </div>
         </form>
       </div>

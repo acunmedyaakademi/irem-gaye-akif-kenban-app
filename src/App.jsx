@@ -3,6 +3,7 @@ import './App.css';
 import "/style/reset.css";
 import { getPage } from "./helper";
 import { TaskProvider } from "./components/TaskContext";
+import { ThemeProvider } from "./components/ThemeContext"; // tema için olan provider
 
 export const PageContext = createContext();
 
@@ -34,13 +35,15 @@ function App() {
 
   return (
     <>
-      <TaskProvider>
-        <div className="app-container">
-          <div className="page">
-            <PageContext.Provider value={page}>{page}</PageContext.Provider>
+      <ThemeProvider>
+        <TaskProvider>
+          <div className="app-container">
+            <div className="page">
+              <PageContext.Provider value={page}>{page}</PageContext.Provider>
+            </div>
           </div>
-        </div>
-      </TaskProvider>
+        </TaskProvider>
+      </ThemeProvider>
     </>
   );
 }

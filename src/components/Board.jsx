@@ -1,5 +1,5 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeSvg } from "../Svg";
+import { DownSvg, PlusSvg, SettingSvg, BoardSvg, HideSidebarSvg, EyeSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
@@ -7,10 +7,8 @@ import EditBoardDialog from "./EditBoardDialog";
 import NewColumn from "./NewColumn"; 
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
-import { DndContext, closestCorners } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useTheme } from "./ThemeContext"; // Theme context import edildi
+import "/style/lightMode.css";
 
 
 export default function Board() {
@@ -23,7 +21,7 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme(); // Tema durumu
 
   if (!data) return <div>Loading...</div>;
 
@@ -131,7 +129,13 @@ const addNewColumnToBoard = (newColumn) => {
           <div className="header-logo">
             <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
           </div>
-          <div className="kanban-logo">{isDesktop && <KanbanSvg />}</div>
+          <div className="kanban-logo">
+            {isDesktop && (
+              theme === "light"
+                ? <img src="svg/dark-kanban.svg" alt="" />
+                : <img src="svg/light-kanban.svg" alt="" />
+            )}
+          </div>
           <div className="active-board-name">
             <h3>{isDesktop && activeBoard}</h3>
           </div>
@@ -168,10 +172,40 @@ const addNewColumnToBoard = (newColumn) => {
                   <span>+ Create New Board</span>
                 </a>
               </div>
-              <button className="hide-sidebar" onClick={toggleSidebar}>
-                <HideSidebarSvg />
-                <span>Hide Sidebar</span>
-              </button>
+              {isDesktop ?
+                <>
+                  <div className="sidebar-footer">
+                    <label className="theme-switch">
+                      <img src="/svg/moon-icon-kanban.svg" alt="Moon Icon" />
+                      <input
+                        className="switch"
+                        type="checkbox"
+                        defaultChecked={theme === "light"}
+                        onChange={toggleTheme}
+                      />
+                      <img src="/svg/sun-icon-kanban.svg" alt="Sun Icon" />
+                    </label>
+                    <button className="hide-sidebar" onClick={toggleSidebar}>
+                      <HideSidebarSvg />
+                      <span>Hide Sidebar</span>
+                    </button>
+                  </div>
+                </>
+                :
+                <>
+                  <label className="theme-switch">
+                    <img src="/svg/moon-icon-kanban.svg" alt="Moon Icon" />
+                    <input
+                      className="switch"
+                      type="checkbox"
+                      defaultChecked={theme === "light"}
+                      onChange={toggleTheme}
+                    />
+                    <img src="/svg/sun-icon-kanban.svg" alt="Sun Icon" />
+                  </label>
+                </>
+              }
+
             </dialog>
           </div>
         </div>
