@@ -3,18 +3,19 @@ import { DownSvg, PlusSvg, SettingSvg, BoardSvg, KanbanSvg, HideSidebarSvg, EyeS
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
+import EditBoardDialog from "./EditBoardDialog";
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar durumu
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Ayarlar dropdown durumu
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Delete dialog durumu
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); 
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   if (!data) return <div>Loading...</div>;
 
-  // Pencere boyutuna göre mobil/masaüstü ayarı
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -68,10 +69,6 @@ export default function Board() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const onEdit = () => {
-    setEdit(true);
   };
 
   const onDelete = () => {
@@ -175,9 +172,10 @@ export default function Board() {
 
           {isDropdownOpen && (
             <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={onEdit}>
+              <button className="task-dropdown-item" onClick={() => setIsEditDialogOpen(true)}>
                 Edit Board
               </button>
+
               <button className="task-dropdown-item delete" onClick={onDelete}>
                 Delete Board
               </button>
@@ -203,29 +201,42 @@ export default function Board() {
         </div>
       </header>
 
+      <EditBoardDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        activeBoard={activeBoard}
+        setActiveBoard={setActiveBoard}
+        data={data}
+        setData={setData}
+      />
+
       {/* Board İçeriği */}
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
-        {currentBoard && (
-          <div className="board-columns">
+        {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
+          <div key={currentBoard.id} className="board-columns">
             {currentBoard.columns.map((column) => (
               <div key={column.id} className="board-column">
                 <h3>{column.name}</h3>
                 <div className="tasks">
-                  {column.tasks.map((task) => {
-                    const activetasks = task.subtasks.filter(x => x.isCompleted).length;
-                    return (
-                      <div
-                        onClick={() => (window.location.hash = `/detail/${task.id}`)}
-                        key={task.id}
-                        className="task-card"
-                      >
-                        <h4>{task.title}</h4>
-                        <h6>
-                          {activetasks} of {task.subtasks.length} subtasks
-                        </h6>
-                      </div>
-                    );
-                  })}
+                  {column.tasks && column.tasks.length > 0 ? (
+                    column.tasks.map((task) => {
+                      const activetasks = task.subtasks.filter(x => x.isCompleted).length;
+                      return (
+                        <div
+                          onClick={() => (window.location.hash = `/detail/${task.id}`)}
+                          key={task.id}
+                          className="task-card"
+                        >
+                          <h4>{task.title}</h4>
+                          <h6>
+                            {activetasks} of {task.subtasks.length} subtasks
+                          </h6>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p>No tasks available</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -235,8 +246,11 @@ export default function Board() {
               </a>
             </div>
           </div>
-        )}
-      </div>
+        ) : (
+    <p>No columns </p>
+  )}
+</div>
+
     </div>
   );
 }
