@@ -755,6 +755,7 @@
 }
 .board-content {
   height: 100vh;
+  overflow-x: auto;
 }
 
 .board-column h3 {
