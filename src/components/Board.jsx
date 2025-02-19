@@ -202,14 +202,16 @@ export default function Board() {
         </div>
       </header>
   
-      <EditBoardDialog
-        isOpen={isEditDialogOpen}
-        onClose={() => setIsEditDialogOpen(false)}
-        activeBoard={activeBoard}
-        setActiveBoard={setActiveBoard}
-        data={data}
-        setData={setData}
-      />
+      <div className="dialog-container">
+  <EditBoardDialog
+    isOpen={isEditDialogOpen}
+    onClose={() => setIsEditDialogOpen(false)}
+    activeBoard={activeBoard}
+    setActiveBoard={setActiveBoard}
+    data={data}
+    setData={setData}
+  />
+</div>
   
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (

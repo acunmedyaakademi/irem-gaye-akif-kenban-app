@@ -641,6 +641,22 @@
   display: none;
 }
 
+.dialog-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  z-index: 1000;
+  margin-block: 250px;
+
+}
+
+
+.dialog-container.open .overlay {
+  display: block;
+}
+
 /* irem bitis */
 
 /* Akif Başlangic */
