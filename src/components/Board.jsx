@@ -274,7 +274,8 @@ const addNewColumnToBoard = (newColumn) => {
           <div key={currentBoard.id} className="board-columns">
             {currentBoard.columns.map((column) => (
               <div key={column.id} className="board-column">
-                <h3>{column.name}</h3>
+                
+                <h3 className="sda"><span className="asd"></span>{column.name}({column.tasks.length})</h3>
                 <div className="tasks">
                   
                   {column.tasks.map((task) => {

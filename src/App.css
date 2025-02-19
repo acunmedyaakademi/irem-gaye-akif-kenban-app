@@ -744,14 +744,17 @@
 }
 
 .board-columns {
+  height: 100%;
   display: flex;
   gap: 24px;
-  overflow-x: auto;
   scroll-snap-type: x mandatory;
 }
 
 .board-column {
   scroll-snap-align: start;
+}
+.board-content {
+  height: 100vh;
 }
 
 .board-column h3 {
@@ -790,13 +793,24 @@
   }
 }
 
+.board-column {
+  flex-shrink: 0;
+}
+
 .tasks {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
   gap: 20px;
+  height: 100%;
+  border: 1px dashed black;
+  width: 300px;
+  align-items: flex-start;
+
 }
+
+
 
 /* Theme Switch */
 
@@ -843,6 +857,32 @@
   padding-inline: 55.5px;
   color: white;
   border: 1px dashed black;
+}
+
+.board-column h3 span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: #49c4e5;
+}
+
+.board-column:nth-child(3n + 1) h3 span {
+  background-color: #49c4e5;
+}
+
+.board-column:nth-child(3n + 2) h3 span {
+  background-color: #8471f2;
+}
+
+.board-column:nth-child(3n) h3 span {
+  background-color: #67e2ae;
+}
+
+.sda {
+  display: flex;
+  align-items: center;
+  gap: 12px
 }
 
 /* Akif Bitiş */
