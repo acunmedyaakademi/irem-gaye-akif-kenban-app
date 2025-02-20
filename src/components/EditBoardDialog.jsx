@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TaskContext } from "./TaskContext";
 
-export default function EditBoardDialog({ isOpen, onClose, activeBoard }) {
+export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiveBoard }) {
   const { data, setData } = useContext(TaskContext);
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
@@ -35,6 +35,7 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard }) {
     });
 
     setData({ ...data, boards: updatedBoards });
+    setActiveBoard(boardName);
     onClose();
   };
 

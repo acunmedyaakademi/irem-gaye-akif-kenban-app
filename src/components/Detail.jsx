@@ -97,12 +97,14 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
       </ul>
 
       <div className="newtask-status-section">
-        <h4>Current Status</h4>
+      <h4>Current Status</h4>
+       <div className="dropdown">
         <select defaultValue={currentTask.status.toLowerCase()}>
           <option value="todo">Todo</option>
           <option value="doing">Doing</option>
           <option value="done">Done</option>
         </select>
+       </div>
       </div>
     </div>
   );
