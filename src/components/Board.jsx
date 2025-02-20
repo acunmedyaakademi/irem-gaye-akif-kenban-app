@@ -317,7 +317,7 @@ export default function Board() {
                   </div>
                 </div>
               ))}
-              <button onClick={openAddColumnDialog} className="new-column">NewColumn</button>
+              <button onClick={openAddColumnDialog} className="new-column">+New Column</button>
             </div>
           </>
         ) : (
