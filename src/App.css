@@ -800,6 +800,7 @@
   width: 280px;
   border-radius: 8px;
   cursor: grab;
+  
 
   h4 {
     font-weight: 700;
@@ -819,6 +820,8 @@
     color: #828FA3;
   }
 }
+
+
 
 .board-column {
   flex-shrink: 0;
@@ -883,6 +886,9 @@
   padding-inline: 55.5px;
   color: white;
   border: 1px dashed black;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30.24px;
 }
 
 .board-column h3 span {
@@ -1047,6 +1053,11 @@
     margin-block: 200px;
   }
 
+  .task-card:hover {
+    transform: scale(0.9);
+  }
+
+
   /* irem bitis */
 
   /* gaye başlangıç */
@@ -1097,5 +1108,5 @@
 }
 
 @media (width >= 1110px) {
-
+ 
 }
