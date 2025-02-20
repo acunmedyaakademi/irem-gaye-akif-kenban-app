@@ -281,16 +281,20 @@ export default function Board() {
         </div>
       </header>
 
-      <div className="dialog-container">
-        <EditBoardDialog
-          isOpen={isEditDialogOpen}
-          onClose={() => setIsEditDialogOpen(false)}
-          activeBoard={activeBoard}
-          setActiveBoard={setActiveBoard}
-          data={data}
-          setData={setData}
-        />
-      </div>
+      {isEditDialogOpen && (
+        <div className="new-board-modal-overlay" onClick={() => setIsEditDialogOpen(false)}>
+          <div className="new-board-modal" onClick={(e) => e.stopPropagation()}>
+            <EditBoardDialog
+              isOpen={isEditDialogOpen}
+              onClose={() => setIsEditDialogOpen(false)}
+              activeBoard={activeBoard}
+              setActiveBoard={setActiveBoard}
+              data={data}
+              setData={setData}
+            />
+          </div>
+        </div>
+      )}
 
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
@@ -348,8 +352,8 @@ export default function Board() {
         </div>
       )}
       {isNewBoardDialogOpen && (
-        <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
-          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="new-board-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
+          <div className="new-board-modal" onClick={(e) => e.stopPropagation()}>
             <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} />
           </div>
         </div>

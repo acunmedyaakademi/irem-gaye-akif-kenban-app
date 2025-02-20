@@ -135,6 +135,11 @@
   color: #828FA3;
 }
 
+.dropdown-menu li:hover {
+  color: #635fc7;
+  background-color: #fff;
+}
+
 /* Toggle */
 .toggle-container {
   display: flex;
@@ -211,6 +216,10 @@
     cursor: pointer;
   }
 
+  .plus-icon:hover {
+    background-color: #A8A4FF;
+  }
+
   .setting-icon {
     cursor: pointer;
     padding: 3px;
@@ -263,6 +272,36 @@
   padding: 24px 24.38px 32px 24px;
   border-radius: 6px;
   position: relative;
+}
+
+.new-board-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.new-board-modal {
+  background-color: #2B2C37;
+  width: 343px;
+  height: auto;
+  padding: 24px 24.38px 32px 24px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.empty-board-message {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18.9px;
+  letter-spacing: 0px;
+  color: #fff;
 }
 
 /* Gaye Bitiş */
@@ -341,6 +380,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
+    color: #fff;
   }
   
   .dropdown-menu {
@@ -403,7 +447,6 @@
   letter-spacing: 0px;
   text-align: center;
   color: #635FC7;
-
 }
 
 .newtask-status-section {
@@ -425,6 +468,10 @@
   text-align: center;
   background-color: #635FC7;
   color: #FFFFFF;
+}
+
+.create-task-btn:hover {
+  background-color: rgba(168, 164, 255, 1);
 }
 
 .detail-container h1 {
@@ -635,6 +682,10 @@
   margin-bottom: 24px;
 }
 
+.detail-checkbox:hover {
+  background-color: #635FC7; 
+}
+
 .sidebar.open .sidebar-toggle-btn {
   display: none;
 }
@@ -666,12 +717,6 @@
 /* NewBoard Component baslangic */
 
 .new-board-container {
-  margin-top: 40px;
-  background-color: rgba(43, 44, 55, 1);
-  padding: 24px;
-  margin-inline: 16px;
-  margin-bottom: 100px;
-  border-radius: 6px;
 
   h2 {
     color: white;
@@ -720,13 +765,19 @@
  
 }
 
-.new-board span {
-  color: rgba(99, 95, 199, 1);
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 18.9px;
-  letter-spacing: 0px;
-  cursor: pointer;
+.new-board {
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  span {
+    color: rgba(99, 95, 199, 1);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18.9px;
+    letter-spacing: 0px;
+    cursor: pointer;
+    padding-left: 12px;
+  }
 }
 
 .flex {
@@ -747,17 +798,39 @@
     padding-block: 8px 9px;
     border: none;
     border-radius: 20px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
   }
 }
 
-.button-area button:nth-child(1) {
-  background-color: white;
+.addnewcolumn {
   color: rgba(99, 95, 199, 1);
+  background-color: white;
 }
 
-.button-area button:nth-child(2) {
+.createnewboard {
   background-color: rgba(99, 95, 199, 1);
   color: white;
+}
+
+.createnewboard:hover {
+  background-color: rgba(168, 164, 255, 1);
+}
+
+.addnewcolumn-board {
+  color: rgba(99, 95, 199, 1);
+  background-color: white;
+}
+
+.savechanges-board {
+  background-color: rgba(99, 95, 199, 1);
+  color: white;
+}
+
+.savechanges-board:hover {
+  background-color: rgba(168, 164, 255, 1);
 }
 
 .board-content {
@@ -798,7 +871,6 @@
   border-radius: 8px;
   cursor: grab;
   
-
   h4 {
     font-weight: 700;
     font-size: 15px;
@@ -806,7 +878,6 @@
     letter-spacing: 0px;
     margin-bottom: 8px;
     color: #FFFFFF;
-
   }
 
   h6 {
@@ -818,7 +889,9 @@
   }
 }
 
-
+.task-card h4:hover {
+  color: #635fc7;
+}
 
 .board-column {
   flex-shrink: 0;
@@ -879,14 +952,20 @@
 }
 
 .new-column {
-  background-color: rgba(43, 44, 55, 1);
+  background: linear-gradient(180deg, rgba(43, 44, 55, 0.25) 0%, rgba(43, 44, 55, 0.125) 100%);
   padding-inline: 55.5px;
-  color: white;
+  color: #828FA3;
   border: none;
+  margin-top: 40px;
   font-weight: 700;
   font-size: 24px;
   line-height: 30.24px;
   border-radius: 6px;
+  cursor: pointer;
+}
+
+.new-column:hover {
+  color: #635FC7;
 }
 
 .board-column h3 span {
@@ -980,7 +1059,7 @@
 
   .sidebar .dropdown-menu {
     display: block;
-    padding: 10px;
+    padding: 0;
     background-color: #2B2C37;
     height: 100%;
     border-right: 1px solid #3E3F4E;
@@ -1008,6 +1087,10 @@
     border-bottom-right-radius: 100px;
     z-index: 1000;
   }
+
+  .sidebar-toggle-btn:hover {
+    background-color:#A8A4FF;
+  }
   
   .sidebar.open .sidebar-toggle-btn {
     display: none; /* Sidebar açıldığında göz ikonu kayboluyor */
@@ -1016,7 +1099,7 @@
   .sidebar.open .hide-sidebar {
     display: block;
     cursor: pointer;
-    background: none;
+    background-color: #2B2C37;
     border: none;
     color: #828FA3;
     display: flex;
@@ -1024,6 +1107,18 @@
     align-items: center;
     gap: 30px;
     width: 240px;
+    padding: 14px 24px;
+    margin-right: 24px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+  }
+
+  .sidebar.open .hide-sidebar:hover {
+    background-color: #FFFFFF;
+  
+    span {
+      color: #635fc7;
+    }
   }
 
   .sidebar .dropdown-btn {
@@ -1102,9 +1197,27 @@
     width: 480px;
   }
 
+  .new-board {
+    span {
+      padding-left: 0;
+    }
+  }
+
   /* gaye bitiş */
 }
 
 @media (width >= 1110px) {
- 
+  .sidebar {
+    top: 80px;
+    width: 300px;
+  }
+
+  .dropdown-menu {
+    width: 300px;
+    padding-block: 19px;
+  
+    ul {
+      padding-right: 24px;
+    }
+  }
 }

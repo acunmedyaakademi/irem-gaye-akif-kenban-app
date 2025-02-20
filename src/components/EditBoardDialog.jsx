@@ -13,7 +13,7 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
     const board = data.boards.find((b) => b.name === activeBoard);
     if (board) {
       setBoardName(board.name);
-      setColumns(board.columns ? board.columns : []); 
+      setColumns(board.columns ? board.columns : []);
     }
   }, [activeBoard, data]);
 
@@ -24,10 +24,10 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
       if (board.name === activeBoard) {
         return {
           ...board,
-          name: boardName, 
+          name: boardName,
           columns: columns.map((column) => ({
-            name: column.name, 
-            tasks: column.tasks || [], 
+            name: column.name,
+            tasks: column.tasks || [],
           })),
         };
       }
@@ -44,22 +44,22 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
       setColumns([
         ...columns,
         {
-          name: newColumn.trim(), 
-          tasks: [], 
+          name: newColumn.trim(),
+          tasks: [],
         },
       ]);
-      setNewColumn(""); 
+      setNewColumn("");
     }
   };
 
   const removeColumn = (index) => {
-    setColumns(columns.filter((_, i) => i !== index)); 
+    setColumns(columns.filter((_, i) => i !== index));
   };
 
   const handleEditColumn = (index, value) => {
     const updatedColumns = [...columns];
     updatedColumns[index].name = value;
-    setColumns(updatedColumns); 
+    setColumns(updatedColumns);
   };
 
   return (
@@ -87,10 +87,10 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
                   type="text"
                   name="columns"
                   value={column.name}
-                  onChange={(e) => handleEditColumn(index, e.target.value)} 
+                  onChange={(e) => handleEditColumn(index, e.target.value)}
                 />
                 <img
-                  onClick={() => removeColumn(index)} 
+                  onClick={() => removeColumn(index)}
                   src="/assets/images/cancel-icon.svg"
                   alt="Remove column"
                 />
@@ -100,16 +100,16 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
               <input
                 type="text"
                 value={newColumn}
-                onChange={(e) => setNewColumn(e.target.value)} 
+                onChange={(e) => setNewColumn(e.target.value)}
                 placeholder="Enter new column"
               />
             </div>
           </div>
           <div className="button-area">
-            <button type="button" onClick={addColumn}>
+            <button className="addnewcolumn-board" type="button" onClick={addColumn}>
               + Add New Column
             </button>
-            <button type="submit">
+            <button type="submit" className="savechanges-board">
               Save Changes
             </button>
           </div>

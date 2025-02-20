@@ -107,7 +107,7 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
         );
       });
     });
-  
+
     setData(updatedData);
   }
 
@@ -123,14 +123,27 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
 
           {isTaskDropdownOpen && (
             <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={handleEditDialog}>
+              <button
+                className="task-dropdown-item"
+                onClick={() => {
+                  handleEditDialog();
+                  setIsTaskDropdownOpen(false);
+                }}
+              >
                 Edit Task
               </button>
-              <button className="task-dropdown-item delete" onClick={handleDelete}>
+              <button
+                className="task-dropdown-item delete"
+                onClick={() => {
+                  handleDelete();
+                  setIsTaskDropdownOpen(false);
+                }}
+              >
                 Delete Task
               </button>
             </div>
           )}
+
         </div>
 
         {isDialogOpen && <DeleteDialog onConfirm={confirmDelete} onCancel={cancelDelete} />}
@@ -145,7 +158,7 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
       <ul className="detail-checkbox-completed">
         {currentTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
-            <input onChange={() => handleCheckboxChange(index)}  type="checkbox" checked={subtask.isCompleted} />
+            <input onChange={() => handleCheckboxChange(index)} type="checkbox" checked={subtask.isCompleted} />
             <li>{subtask.title}</li>
           </div>
         ))}

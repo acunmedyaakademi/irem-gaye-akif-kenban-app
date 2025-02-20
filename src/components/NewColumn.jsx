@@ -87,10 +87,10 @@ export default function NewColumn() {
           ))}
         </div>
         <div className="button-area">
-          <button type="button" onClick={addNewColumnInput}>
+          <button type="button" onClick={addNewColumnInput} className="addnewcolumn-board">
             + Add New Column
           </button>
-          <button type="submit">Save Changes</button>
+          <button type="submit" className="savechanges-board">Save Changes</button>
         </div>
       </form>
     </div>

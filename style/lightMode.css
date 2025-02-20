@@ -159,6 +159,64 @@ body.light {
   background-color: #F4F7FD;
 }
 
+.light .new-board-modal {
+  background: #FFFFFF;
+}
+
+.light .addnewcolumn-board {
+  background-color: rgba(99, 95, 199, 0.1);
+}
+
+.light .addnewcolumn-board:hover {
+  background: rgba(99, 95, 199, 0.25);
+}
+
+.light .addnew-subtask-btn {
+  background-color: #635FC71A;
+}
+
+.light .addnew-subtask-btn:hover {
+  background-color: #635FC740;
+}
+
+.light .sidebar.open .hide-sidebar {
+  background-color: transparent;
+  color: #828FA3;
+}
+
+.light .sidebar.open .hide-sidebar:hover {
+  background-color: #635fc71a;
+
+  span {
+    color: #635fc7;
+  }
+}
+
+.light .dropdown-menu li:hover {
+  background-color: #635fc71a;
+  color: #635fc7;
+}
+
+.light .task-card h4:hover {
+  color: #635fc7;
+}
+
+.light .dropdown-selected {
+  color: #000112;
+}
+
+.light .detail-checkbox:hover {
+  background-color: #d8d7f1;
+}
+
+.light .new-column:hover {
+  color: #635FC7;
+}
+
+.light .empty-board-message {
+  color: #000112;
+}
+
 @media (width >= 768px) {
   .light .header {
     border-bottom: 1px solid #E4EBFA;
