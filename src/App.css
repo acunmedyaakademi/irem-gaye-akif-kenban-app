@@ -822,7 +822,6 @@
   justify-content: flex-start;
   gap: 20px;
   height: 100%;
-  border: 1px dashed black;
   width: 300px;
   align-items: flex-start;
 
@@ -930,7 +929,9 @@
     transform: translateX(-100%);
   }
 
-  
+  .added-column {
+    border: 1px dashed black;
+  }
 
   .sidebar.open {
     transform: translateX(0);
@@ -1029,7 +1030,7 @@
 
   .dialog-container {
     position: fixed; 
-    top: 200px; 
+    top: 290px; 
     left: 50%; 
     transform: translate(-50%, -50%);
     z-index: 1000; 

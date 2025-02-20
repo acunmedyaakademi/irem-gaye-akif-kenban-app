@@ -21,7 +21,8 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false)
+  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
+  const [isNewBoardDialogOpen, setIsNewBoardDialogOpen] = useState(false);
   const { theme, toggleTheme } = useTheme(); // Tema durumu
 
   const [statuses, setStatuses] = useState([]);
@@ -124,6 +125,10 @@ export default function Board() {
   // Yeni görev dialogunu açma fonksiyonu
   const openNewTaskDialog = () => {
     setIsNewTaskDialogOpen(true);
+  };
+
+  const openNewBoardDialog = () => {
+    setIsNewBoardDialogOpen(true);
   };
 
   const openAddColumnDialog = () => {
@@ -340,6 +345,13 @@ export default function Board() {
         <div className="new-task-modal-overlay" onClick={() => setIsColumnDialogOpen(false)}>
           <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
             <NewColumn onClose={() => setIsColumnDialogOpen(false)} addNewColumnToBoard={addNewColumnToBoard} />
+          </div>
+        </div>
+      )}
+      {isNewBoardDialogOpen && (
+        <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
+          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+            <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} openNewBoardDialog={openNewBoardDialog} />
           </div>
         </div>
       )}

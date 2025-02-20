@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import "/style/new-board.css";
 import { TaskContext } from "./TaskContext";
 
-export default function NewBoard() {
+export default function NewBoard({onClose}) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
@@ -39,6 +39,7 @@ export default function NewBoard() {
 
     setData({ ...data, boards: [...data.boards, newBoard] });
     setActiveBoard(boardName);
+    onClose()
   };
 
   return (
