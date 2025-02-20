@@ -135,10 +135,6 @@
   color: #828FA3;
 }
 
-.dropdown-menu a {
-  color: #635FC7;
-}
-
 /* Toggle */
 .toggle-container {
   display: flex;
@@ -723,6 +719,7 @@
   }
  
 }
+
 .new-board span {
   color: rgba(99, 95, 199, 1);
   font-weight: 700;

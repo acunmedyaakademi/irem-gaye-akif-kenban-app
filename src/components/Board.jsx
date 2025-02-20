@@ -191,10 +191,9 @@ export default function Board() {
                   </li>
                 ))}
               </ul>
-              <div className="new-board">
-               
-                  <BoardSvg />
-                  <span onClick={()=> setIsNewBoardDialogOpen(true)}>+ Create New Board</span>
+              <div className="new-board" style={{ color: "#6c5ce7" }}>
+                <BoardSvg />
+                <span onClick={() => setIsNewBoardDialogOpen(true)}>+ Create New Board</span>
               </div>
               {isDesktop ?
                 <>
@@ -348,13 +347,13 @@ export default function Board() {
           </div>
         </div>
       )}
-       {isNewBoardDialogOpen && (
-      <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
-        <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
-          <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} />
+      {isNewBoardDialogOpen && (
+        <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
+          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+            <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} />
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   );
 }
