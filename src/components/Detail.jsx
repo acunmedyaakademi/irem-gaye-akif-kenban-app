@@ -1,19 +1,26 @@
 import { useContext, useState } from "react";
-import { SettingSvg } from "../Svg";
+import { SettingSvg, DownSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 import DeleteDialog from "./DeleteDialog";
 
 export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOpen }) {
   const { currentTask, setEdit, setCurrentTask, data, setData } = useContext(TaskContext);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isTaskDropdownOpen, setIsTaskDropdownOpen] = useState(false);
+
+  // Taskın bulunduğu boardu buluyoruz
+  const currentBoard = data.boards.find(board =>
+    board.columns.some(column => column.tasks.some(task => task.id === currentTask.id))
+  );
+
+  // Bu boarddaki columnları dinamik olarak alıyoruz
+  const statuses = currentBoard ? currentBoard.columns.map(column => column.name) : [];
 
   if (!currentTask) {
     return <div>Loading...</div>;
   }
 
-  // task detayda açılan dialog
   const toggleDropdown = () => {
     setIsTaskDropdownOpen(prevState => !prevState);
   };
@@ -55,9 +62,39 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
     setIsDialogOpen(false);
   }
 
+  const handleStatusChange = (status) => {
+    const updatedData = { ...data };
+    let found = false;
+
+    // Taskı uygun sütuna taşımak
+    for (let board of updatedData.boards) {
+      for (let column of board.columns) {
+        const taskIndex = column.tasks.findIndex((task) => task.id === currentTask.id);
+        if (taskIndex !== -1) {
+          column.tasks.splice(taskIndex, 1); // Taskı çıkarıyoruz
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+
+    // Taskı yeni sütuna eklemek
+    for (let board of updatedData.boards) {
+      for (let column of board.columns) {
+        if (column.name.toLowerCase() === status.toLowerCase()) {
+          column.tasks.push(currentTask);
+          break;
+        }
+      }
+    }
+
+    currentTask.status = status; // Taskın statusünü güncelliyoruz
+    setData(updatedData);
+  };
+
   return (
     <div className="detail-container">
-
       <div className="title-setting-section relative">
         <h1>{currentTask.title}</h1>
 
@@ -98,11 +135,27 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
 
       <div className="newtask-status-section">
         <h4>Current Status</h4>
-        <select defaultValue={currentTask.status.toLowerCase()}>
-          <option value="todo">Todo</option>
-          <option value="doing">Doing</option>
-          <option value="done">Done</option>
-        </select>
+        <div className="dropdown">
+          <div className="dropdown-selected" onClick={() => setIsOpen(!isOpen)}>
+            {currentTask.status}
+            <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>
+              <DownSvg />
+            </span>
+          </div>
+          {isOpen && (
+            <div className="dropdown-menu">
+              {statuses.map((status) => (
+                <div
+                  key={status}
+                  className="dropdown-item"
+                  onClick={() => handleStatusChange(status)}
+                >
+                  {status}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

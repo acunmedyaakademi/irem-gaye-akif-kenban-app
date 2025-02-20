@@ -5,20 +5,21 @@ import { TaskContext } from "./TaskContext";
 export default function NewTask({ onClose }) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard } = useContext(TaskContext);
 
-  // Eğer activeBoard tanımlı değilse, veri içindeki ilk board'un adını kullanıyoruz.
+  // Eğer activeBoard tanımlı değilse veri içindeki ilk boardun adını kullanıyoruz.
   const effectiveActiveBoard =
     activeBoard ||
     (data && data.boards && data.boards.length > 0 ? data.boards[0].name : "");
+
+  const currentBoard = data.boards.find(board => board.name === effectiveActiveBoard) || { columns: [] };
+  const statuses = currentBoard.columns.map((column) => column.name); // Dinamik status listesi
 
   const [columns, setColumns] = useState(
     currentTask ? currentTask.subtasks.map((st) => st.title) : []
   );
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(
-    currentTask ? currentTask.status : "Todo"
+    currentTask ? currentTask.status : statuses[0] // İlk statusü varsayılan yap
   );
-
-  const statuses = ["Todo", "Doing", "Done"];
 
   const handleSelect = (status) => {
     setSelectedStatus(status);
@@ -111,7 +112,7 @@ export default function NewTask({ onClose }) {
           if (taskIndex !== -1) {
             // Eski görevi çıkarıyoruz
             col.tasks.splice(taskIndex, 1);
-            // Yeni statüye uygun column'u buluyoruz
+            // Yeni statüye uygun columnu buluyoruz
             const targetColumn = board.columns.find(
               (c) => c.name === selectedStatus
             );
