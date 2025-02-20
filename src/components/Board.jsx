@@ -4,7 +4,7 @@ import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
 import EditBoardDialog from "./EditBoardDialog";
-import NewColumn from "./NewColumn"; 
+import NewColumn from "./NewColumn";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 import { useTheme } from "./ThemeContext"; // Theme context import edildi
@@ -12,7 +12,7 @@ import "/style/lightMode.css";
 
 
 export default function Board() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,8 +21,29 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isColumnDialogOpen,setIsColumnDialogOpen] = useState(false)
+  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false)
   const { theme, toggleTheme } = useTheme(); // Tema durumu
+
+  const [statuses, setStatuses] = useState([]);
+  useEffect(() => {
+    // data ve boardsun varlığını kontrol et
+    if (data && data.boards) {
+      const currentBoard = data.boards.find(board => board.name === activeBoard);
+      if (currentBoard) {
+        setStatuses(currentBoard.columns.map(column => column.name));
+      }
+    }
+  }, [activeBoard, data]); // data değiştiğinde veya activeBoard değiştiğinde çalışacak
+
+
+  useEffect(() => {
+    // İlk yüklemede yalnızca ilk boardı seç
+    if (data && data.boards && data.boards.length > 0 && !activeBoard) {
+      const firstBoardName = data.boards[0].name;
+      setActiveBoard(firstBoardName);  // İlk boardu seç
+    }
+  }, [data, activeBoard]);  // activeBoard ilk başta undefined olduğunda çalışsın sonrasında aktif boardu değiştirme
+
 
   if (!data) return <div>Loading...</div>;
 
@@ -41,7 +62,6 @@ export default function Board() {
   const boards = data.boards || [];
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [activeBoard, setActiveBoard] = useState("Platform Launch");
   const dialogRef = useRef(null);
 
   const toggleDialog = () => {
@@ -62,11 +82,10 @@ export default function Board() {
   };
 
   const handleBoardClick = (boardName) => {
-    setActiveBoard(boardName);
-    if (dialogRef.current) {
-      dialogRef.current.close();
-      setIsOpen(false);
+    if (boardName !== activeBoard) {  // Eğer board aynı değilse değiştir
+      setActiveBoard(boardName);
     }
+    setIsOpen(false);  // Dropdownu kapat
   };
 
   const currentBoard = boards.find((board) => board.name === activeBoard) || { columns: [] };
@@ -110,17 +129,17 @@ export default function Board() {
   const openAddColumnDialog = () => {
     setIsColumnDialogOpen(true);
   }
-const addNewColumnToBoard = (newColumn) => {
-  const updatedBoards = data.boards.map((board) => {
-    if (board.name === activeBoard) {
-      return { ...board, columns: [...board.columns, newColumn] };
-    }
-    return board;
-  });
+  const addNewColumnToBoard = (newColumn) => {
+    const updatedBoards = data.boards.map((board) => {
+      if (board.name === activeBoard) {
+        return { ...board, columns: [...board.columns, newColumn] };
+      }
+      return board;
+    });
 
-  setData({ ...data, boards: updatedBoards });
+    setData({ ...data, boards: updatedBoards });
 
-};
+  };
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
@@ -272,29 +291,29 @@ const addNewColumnToBoard = (newColumn) => {
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
         {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
           <>
-          <div key={currentBoard.id} className="board-columns">
-            {currentBoard.columns.map((column) => (
-              <div key={column.id} className="board-column">
-                
-                <h3 className="sda"><span className="asd"></span>{column.name}({column.tasks.length})</h3>
-                <div className="tasks">
-                  
-                  {column.tasks.map((task) => {
-                    const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
-                    return (
-                      <div key={task.id} className="task-card" onClick={() => openDetailDialog(task)}>
-                        <h4>{task.title}</h4>
-                        <h6>
-                          {activetasks} of {task.subtasks.length} subtasks
-                        </h6>
-                      </div>
-                    );
-                  })}       
+            <div key={currentBoard.id} className="board-columns">
+              {currentBoard.columns.map((column) => (
+                <div key={column.id} className="board-column">
+
+                  <h3 className="sda"><span className="asd"></span>{column.name}({column.tasks.length})</h3>
+                  <div className="tasks">
+
+                    {column.tasks.map((task) => {
+                      const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
+                      return (
+                        <div key={task.id} className="task-card" onClick={() => openDetailDialog(task)}>
+                          <h4>{task.title}</h4>
+                          <h6>
+                            {activetasks} of {task.subtasks.length} subtasks
+                          </h6>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-            <button onClick={openAddColumnDialog} className="new-column">NewColumn</button>
-          </div>
+              ))}
+              <button onClick={openAddColumnDialog} className="new-column">NewColumn</button>
+            </div>
           </>
         ) : (
           <div className="empty-board-message">No columns available</div>
