@@ -741,6 +741,9 @@
 .board-content {
   padding-left: 24px;
   padding-top: 40px;
+  height: 100vh;
+  overflow-x: auto;
+  cursor: move;
 }
 
 .board-columns {
@@ -753,10 +756,7 @@
 .board-column {
   scroll-snap-align: start;
 }
-.board-content {
-  height: 100vh;
-  overflow-x: auto;
-}
+
 
 .board-column h3 {
   color: rgba(130, 143, 163, 1);
@@ -774,6 +774,7 @@
   box-shadow: 0px 4px 6px 0px #364E7E1A;
   width: 280px;
   border-radius: 8px;
+  cursor: grab;
 
   h4 {
     font-weight: 700;

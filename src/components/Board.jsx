@@ -122,7 +122,6 @@ const addNewColumnToBoard = (newColumn) => {
 
 };
 
-
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <header className="header">

@@ -43,8 +43,12 @@ body.light {
 }
 
 .light .new-column {
-  background-color: white;
+  background: linear-gradient(180deg, #E9EFFA 0%, rgba(233, 239, 250, 0.5) 100%);
   border:1px dashed black;
+  color: rgba(130, 143, 163, 1);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30.24px;
 }
 
 .light .new-board-container {

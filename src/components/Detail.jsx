@@ -55,6 +55,27 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
     setIsDialogOpen(false);
   }
 
+  function handleCheckboxChange(index) {
+    const updatedSubtasks = currentTask.subtasks.map((subtask, i) =>
+      i === index ? { 
+        ...subtask,
+        isCompleted: !subtask.isCompleted } : subtask
+    );
+  
+    const updatedTask = { ...currentTask, subtasks: updatedSubtasks };
+    setCurrentTask(updatedTask);
+    const updatedData = { ...data };
+    updatedData.boards.forEach((board) => {
+      board.columns.forEach((column) => {
+        column.tasks = column.tasks.map((task) =>
+          task.id === currentTask.id ? updatedTask : task
+        );
+      });
+    });
+  
+    setData(updatedData);
+  }
+
   return (
     <div className="detail-container">
 
@@ -90,7 +111,7 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
       <ul className="detail-checkbox-completed">
         {currentTask.subtasks.map((subtask, index) => (
           <div key={index} className="detail-checkbox">
-            <input type="checkbox" checked={subtask.isCompleted} readOnly />
+            <input onChange={() => handleCheckboxChange(index)}  type="checkbox" checked={subtask.isCompleted} />
             <li>{subtask.title}</li>
           </div>
         ))}
