@@ -3,6 +3,7 @@ import { DownSvg, PlusSvg, SettingSvg, BoardSvg, HideSidebarSvg, EyeSvg } from "
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
+import NewBoard from "./NewBoard";
 import EditBoardDialog from "./EditBoardDialog";
 import NewColumn from "./NewColumn";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
@@ -191,10 +192,9 @@ export default function Board() {
                 ))}
               </ul>
               <div className="new-board">
-                <a href="#/new-board">
+               
                   <BoardSvg />
-                  <span>+ Create New Board</span>
-                </a>
+                  <span onClick={()=> setIsNewBoardDialogOpen(true)}>+ Create New Board</span>
               </div>
               {isDesktop ?
                 <>
@@ -348,14 +348,13 @@ export default function Board() {
           </div>
         </div>
       )}
-      {isNewBoardDialogOpen && (
-        <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
-          <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
-            <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} openNewBoardDialog={openNewBoardDialog} />
-          </div>
+       {isNewBoardDialogOpen && (
+      <div className="new-task-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
+        <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
+          <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} />
         </div>
-      )}
-
+      </div>
+    )}
     </div>
   );
 }

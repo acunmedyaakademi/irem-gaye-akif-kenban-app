@@ -721,6 +721,15 @@
   input:focus {
     border: 1px solid #635FC7;
   }
+ 
+}
+.new-board span {
+  color: rgba(99, 95, 199, 1);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18.9px;
+  letter-spacing: 0px;
+  cursor: pointer;
 }
 
 .flex {

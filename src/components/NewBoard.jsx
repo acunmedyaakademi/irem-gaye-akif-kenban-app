@@ -2,11 +2,12 @@ import { useState, useContext } from "react";
 import "/style/new-board.css";
 import { TaskContext } from "./TaskContext";
 
-export default function NewBoard({onClose}) {
+export default function NewBoard({onClose,isNewBoardDialogOpen, setIsNewBoardDialogOpen}) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
   console.log(columns);
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -39,7 +40,7 @@ export default function NewBoard({onClose}) {
 
     setData({ ...data, boards: [...data.boards, newBoard] });
     setActiveBoard(boardName);
-    onClose()
+    setIsNewBoardDialogOpen(false); 
   };
 
   return (
@@ -64,7 +65,7 @@ export default function NewBoard({onClose}) {
           </div>
           <div className="button-area">
             <button type="button" onClick={addColumn}>+ Add New Column</button>
-            <a href="#/" onSubmit={handleSubmit}><button type="button" onClick={createBoard}>Create New Board</button></a>
+            <button type="button" onClick={createBoard}>Create New Board</button>
           </div>
         </form>
       </div>
