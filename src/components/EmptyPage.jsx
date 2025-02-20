@@ -1,3 +1,6 @@
+import NewColumn from "./NewColumn";
+import { useState, useRef, useContext, useEffect } from "react";
+
 export default function EmptyPage() {
   return (
     <>

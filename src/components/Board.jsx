@@ -6,6 +6,7 @@ import DeleteDialog from "./DeleteDialog";
 import NewBoard from "./NewBoard";
 import EditBoardDialog from "./EditBoardDialog";
 import NewColumn from "./NewColumn";
+import EmptyPage from "./EmptyPage";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 import { useTheme } from "./ThemeContext"; // Theme context import edildi
@@ -305,8 +306,7 @@ export default function Board() {
                 <div key={column.id} className="board-column">
 
                   <h3 className="sda"><span className="asd"></span>{column.name}({column.tasks.length})</h3>
-                  <div className="tasks">
-
+                  <div className="tasks" style={column.tasks.length === 0 ? { outline: "1px dashed #828fa3", outlineWidth: 2, borderRadius: 6 } : {}}>
                     {column.tasks.map((task) => {
                       const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
                       return (
@@ -325,7 +325,7 @@ export default function Board() {
             </div>
           </>
         ) : (
-          <div className="empty-board-message">No columns available</div>
+          <div className="empty-board-message"><EmptyPage /></div>
         )}
       </div>
 
@@ -355,7 +355,7 @@ export default function Board() {
       {isNewBoardDialogOpen && (
         <div className="new-board-modal-overlay" onClick={() => setIsNewBoardDialogOpen(false)}>
           <div className="new-board-modal" onClick={(e) => e.stopPropagation()}>
-            <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} />
+            <NewBoard onClose={() => setIsNewBoardDialogOpen(false)} isNewBoardDialogOpen={isNewBoardDialogOpen} setIsNewBoardDialogOpen={setIsNewBoardDialogOpen} />
           </div>
         </div>
       )}
