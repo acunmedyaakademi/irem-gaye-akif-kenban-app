@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { DownSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
+import toast from "react-hot-toast"
 
 export default function NewTask({ onClose }) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard } = useContext(TaskContext);
@@ -78,6 +79,7 @@ export default function NewTask({ onClose }) {
     setColumns([]);
     setSelectedStatus("Todo");
     setCurrentTask(null);
+    toast.success("Task added successfully!");
     onClose(); // Modalı kapat
   }
 
@@ -125,6 +127,7 @@ export default function NewTask({ onClose }) {
       }
 
       localStorage.setItem("taskData", JSON.stringify(newData));
+      toast.success("Task updated successfully!");
       return newData;
     });
 

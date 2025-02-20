@@ -10,7 +10,7 @@ import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 import { useTheme } from "./ThemeContext"; // Theme context import edildi
 import "/style/lightMode.css";
-
+import toast from "react-hot-toast"
 
 export default function Board() {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
@@ -110,6 +110,7 @@ export default function Board() {
     setData({ ...data, boards: updatedBoards });
     setActiveBoard(updatedBoards.length > 0 ? updatedBoards[0].name : "Platform Launch");
     setIsDeleteDialogOpen(false);
+    toast.success("Board deleted successfully!");
   };
 
   const onCancel = () => {

@@ -4,6 +4,7 @@ import "/style/reset.css";
 import { getPage } from "./helper";
 import { TaskProvider } from "./components/TaskContext";
 import { ThemeProvider } from "./components/ThemeContext"; // tema için olan provider
+import { Toaster } from "react-hot-toast";
 
 export const PageContext = createContext();
 
@@ -36,6 +37,7 @@ function App() {
   return (
     <>
       <ThemeProvider>
+        <Toaster position="top-center" reverseOrder={false} />
         <TaskProvider>
           <div className="app-container">
             <div className="page">

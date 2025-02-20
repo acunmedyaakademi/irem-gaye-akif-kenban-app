@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import "/style/new-board.css";
 import { TaskContext } from "./TaskContext";
+import toast from "react-hot-toast"
 
 export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardDialogOpen }) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
@@ -41,6 +42,7 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
     setData({ ...data, boards: [...data.boards, newBoard] });
     setActiveBoard(boardName);
     setIsNewBoardDialogOpen(false);
+    toast.success("Board added successfully!");
   };
 
   return (

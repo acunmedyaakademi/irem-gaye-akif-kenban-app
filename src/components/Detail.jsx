@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { SettingSvg, DownSvg } from "../Svg";
 import { TaskContext } from "./TaskContext";
 import DeleteDialog from "./DeleteDialog";
+import toast from "react-hot-toast"
 
 export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOpen }) {
   const { currentTask, setEdit, setCurrentTask, data, setData } = useContext(TaskContext);
@@ -51,11 +52,13 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
           setData(updatedData);
           setCurrentTask(null);
           setIsDialogOpen(false);
+          toast.success("Task deleted successfully!");
           onClose(); // Modalı kapat
           return;
         }
       }
     }
+
   }
 
   function cancelDelete() {
