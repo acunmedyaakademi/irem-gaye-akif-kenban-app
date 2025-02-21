@@ -184,6 +184,7 @@
   align-items: center;
   gap: 25px;
   text-align: center;
+  height: 100vh;
 
   h4 {
     font-weight: 700;
@@ -205,6 +206,10 @@
     padding: 15px 18px;
     border: none;
   }
+}
+
+.flex img {
+  cursor: pointer;
 }
 
 .btns-area {
@@ -246,6 +251,15 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease
+}
+
+/* Açık olduğunda overlay görünür hale gelir */
+.detail-modal-overlay:has(.detail-modal) {
+  opacity: 1;
+  visibility: visible;
 }
 
 .detail-modal {
@@ -254,6 +268,21 @@
   padding: 24px 24.38px 32px 24px;
   border-radius: 6px;
   position: relative;
+  transform: scale(0.7);
+  opacity: 0;
+  animation: modalOpen 0.3s ease-out forwards;
+}
+
+/* Açılma animasyonu */
+@keyframes modalOpen {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .new-task-modal-overlay {
@@ -267,6 +296,15 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Açık olduğunda overlay görünür hale gelir */
+.new-task-modal-overlay:has(.new-task-modal) {
+  opacity: 1;
+  visibility: visible;
 }
 
 .new-task-modal {
@@ -276,6 +314,9 @@
   padding: 24px 24.38px 32px 24px;
   border-radius: 6px;
   position: relative;
+  transform: scale(0.7);
+  opacity: 0;
+  animation: modalOpen 0.3s ease-out forwards;
 }
 
 .new-board-modal-overlay {
@@ -289,6 +330,15 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Açık olduğunda overlay görünür hale gelir */
+.new-board-modal-overlay:has(.new-board-modal) {
+  opacity: 1;
+  visibility: visible;
 }
 
 .new-board-modal {
@@ -298,6 +348,9 @@
   padding: 24px 24.38px 32px 24px;
   border-radius: 6px;
   position: relative;
+  transform: scale(0.7);
+  opacity: 0;
+  animation: modalOpen 0.3s ease-out forwards;
 }
 
 /* Gaye Bitiş */
@@ -571,6 +624,15 @@
   align-items: center; 
   z-index: 1000;
   padding-inline: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Açık olduğunda overlay görünür hale gelir */
+.dialog-overlay:has(.delete-dialog) {
+  opacity: 1;
+  visibility: visible;
 }
 
 .delete-dialog {
@@ -578,6 +640,9 @@
   padding: 24px;
   border-radius: 6px;
   width: 343px;
+  transform: scale(0.7);
+  opacity: 0;
+  animation: modalOpen 0.3s ease-out forwards;
 }
 
 .delete-dialog h3 {
@@ -830,14 +895,14 @@
 }
 
 .board-content {
-  padding-left: 24px;
-  padding-top: 40px;
   height: 100vh;
   overflow-x: auto;
   cursor: move;
 }
 
 .board-columns {
+  padding-left: 24px;
+  padding-top: 40px;
   height: 100%;
   display: flex;
   gap: 24px;
