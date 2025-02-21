@@ -1133,6 +1133,9 @@
     display: flex;
     gap: 10px;
   }
+  .theme-switch {
+    margin-inline: auto;
+  }
 
   .sidebar-toggle-btn {
     display: block;
@@ -1196,6 +1199,7 @@
   .theme-switch {
     margin-left: 0;
     margin-top: 16px;
+    margin-inline: auto;
   }
 
   .dialog-container {
