@@ -2,20 +2,22 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { TaskContext } from "./TaskContext";
 
 export default function NewColumn({ onClose }) {
-  const { data, setData } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [inputs, setInputs] = useState([]);
   const [selectedBoardId, setSelectedBoardId] = useState('');
   const [boardData, setBoardData] = useState(null);
   const resetRef = useRef();
 
   useEffect(() => {
-    if (data.boards.length > 0) {
-      setSelectedBoardId(data.boards[0].id);
-    }
-  }, [data.boards]);
+   const activeBoardData = data.boards.find((board)=> board.name === activeBoard)
+   if(activeBoardData) {
+    setSelectedBoardId(activeBoardData.id)
+   }
+  }, [data.boards, activeBoard]);
 
   useEffect(() => {
     const board = data.boards.find((x) => x.id === selectedBoardId);
+    console.log(board)
     setBoardData(board || null);
   }, [selectedBoardId, data]);
 

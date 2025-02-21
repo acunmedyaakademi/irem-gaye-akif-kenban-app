@@ -985,6 +985,7 @@
   width: 235px;
   margin-top: 16px;
   border-radius: 6px;
+  margin-inline: auto;
 }
 
 .switch {
