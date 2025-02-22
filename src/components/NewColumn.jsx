@@ -9,6 +9,8 @@ export default function NewColumn({ onClose }) {
   const [boardData, setBoardData] = useState(null);
   const resetRef = useRef();
 
+  //Yeni column ekleme
+
   useEffect(() => {
     const activeBoardData = data.boards.find((board) => board.name === activeBoard)
     if (activeBoardData) {
@@ -31,6 +33,7 @@ export default function NewColumn({ onClose }) {
       );
     }
   }, [boardData]);
+  
 
   function addNewColumnInput(e) {
     e.preventDefault();
@@ -63,6 +66,8 @@ export default function NewColumn({ onClose }) {
     if (onClose) onClose();
     toast.success("New column added successfully!");
   }
+
+  // dialog içindeki columnu silme
 
   function removeColumn(id) {
     setInputs(inputs.filter((input) => input.id !== id));

@@ -12,6 +12,7 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
     e.preventDefault();
   }
 
+ // Dialog içindeki input alanı ekle
   function addColumn() {
     setColumns([...columns, ""]);
     console.log(columns)
@@ -23,6 +24,7 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
     setColumns(newColumns)
   }
 
+  // Dialog içindeki input alanını silme
   function removeColumn(index) {
     const newColumns = columns.filter((column, i) => i !== index);
     setColumns(newColumns);
