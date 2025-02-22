@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TaskContext } from "./TaskContext";
+import toast from "react-hot-toast"
 
 export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiveBoard }) {
   const { data, setData } = useContext(TaskContext);
@@ -37,6 +38,7 @@ export default function EditBoardDialog({ isOpen, onClose, activeBoard, setActiv
     setData({ ...data, boards: updatedBoards });
     setActiveBoard(boardName);
     onClose();
+    toast.success("Board updated successfully!");
   };
 
   const addColumn = () => {

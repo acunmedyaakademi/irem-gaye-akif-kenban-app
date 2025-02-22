@@ -7,8 +7,6 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
-  console.log(columns);
-
 
   function handleSubmit(e) {
     e.preventDefault();

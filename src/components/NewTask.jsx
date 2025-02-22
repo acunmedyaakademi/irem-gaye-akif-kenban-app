@@ -71,7 +71,7 @@ export default function NewTask({ onClose }) {
         };
       });
 
-      localStorage.setItem("taskData", JSON.stringify(newData));
+      localStorage.taskData = JSON.stringify(newData);
       return newData;
     });
 
@@ -126,7 +126,7 @@ export default function NewTask({ onClose }) {
         }
       }
 
-      localStorage.setItem("taskData", JSON.stringify(newData));
+      localStorage.taskData = JSON.stringify(newData);
       toast.success("Task updated successfully!");
       return newData;
     });

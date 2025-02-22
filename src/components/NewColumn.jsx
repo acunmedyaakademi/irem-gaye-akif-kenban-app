@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { TaskContext } from "./TaskContext";
+import toast from "react-hot-toast"
 
 export default function NewColumn({ onClose }) {
   const { data, setData, isEdit, setEdit, currentTask, setCurrentTask, activeBoard, setActiveBoard } = useContext(TaskContext);
@@ -9,15 +10,14 @@ export default function NewColumn({ onClose }) {
   const resetRef = useRef();
 
   useEffect(() => {
-   const activeBoardData = data.boards.find((board)=> board.name === activeBoard)
-   if(activeBoardData) {
-    setSelectedBoardId(activeBoardData.id)
-   }
+    const activeBoardData = data.boards.find((board) => board.name === activeBoard)
+    if (activeBoardData) {
+      setSelectedBoardId(activeBoardData.id)
+    }
   }, [data.boards, activeBoard]);
 
   useEffect(() => {
     const board = data.boards.find((x) => x.id === selectedBoardId);
-    console.log(board)
     setBoardData(board || null);
   }, [selectedBoardId, data]);
 
@@ -61,6 +61,7 @@ export default function NewColumn({ onClose }) {
     setData({ ...data, boards: updatedData });
     resetRef.current.reset();
     if (onClose) onClose();
+    toast.success("New column added successfully!");
   }
 
   function removeColumn(id) {

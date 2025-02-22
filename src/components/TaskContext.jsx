@@ -11,28 +11,29 @@ export function TaskProvider({ children }) {
   });
 
 
-  // Sayfa yüklendiğinde `localStorage` kontrol et, yoksa `data.json`'dan al**
+  // sayfa yüklendiğinde localStorageı kontrol et yoksa data.jsondan al
   useEffect(() => {
-    const storedTasks = JSON.parse(localStorage.getItem("taskData"));
-
-    if (storedTasks && storedTasks.length > 0) {
+    const storedTasks = JSON.parse(localStorage.taskData || "null");
+    if (storedTasks?.boards?.length > 0) {
       setData(storedTasks);
     } else {
       async function getData() {
-        const data = await fetch("data/data.json").then(res => res.json());
-        setData(data);
-        localStorage.setItem("taskData", JSON.stringify(data));
+        const response = await fetch("data/data.json");
+        const fetchedData = await response.json();
+        setData(fetchedData);
+        localStorage.taskData = JSON.stringify(fetchedData);
       }
       getData();
     }
   }, []);
 
-  // `data` değiştiğinde `localStorage`'ı güncelle**
+  // data değiştiğinde localstorageı güncelle
   useEffect(() => {
-    if (data.length > 0) {
-      localStorage.setItem("taskData", JSON.stringify(data));
+    if (data?.boards?.length > 0) {
+      localStorage.taskData = JSON.stringify(data);
     }
   }, [data]);
+
 
   return (
     <TaskContext.Provider
