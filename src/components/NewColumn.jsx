@@ -33,7 +33,7 @@ export default function NewColumn({ onClose }) {
       );
     }
   }, [boardData]);
-  
+
 
   function addNewColumnInput(e) {
     e.preventDefault();
@@ -49,26 +49,46 @@ export default function NewColumn({ onClose }) {
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
 
-    const updatedColumns = inputs.map((input) => ({
-      id: input.id,
-      name: formObj[`columnName${input.id}`] || input.name,
-      tasks: boardData?.columns?.find(x => x.id === input.id)?.tasks || [],
-    }));
+    console.log("📌 Gelen Form Verisi:", formObj);
+    console.log("📌 Orijinal Inputs:", inputs);
 
+    // Kullanıcının doldurduğu inputları kontrol et
+    const hasValidInput = inputs.some((input) => {
+      const columnName = formObj[`columnName${input.id}`]?.trim();
+      return columnName !== "";
+    });
+
+    // Eğer hiçbir input geçerli değilse hata ver
+    if (!hasValidInput) {
+      toast.error("Board name and at least one valid column are required!");
+      return;
+    }
+
+    // Geçerli columnları filtrele
+    const validColumns = inputs
+      .map((input) => ({
+        id: input.id,
+        name: formObj[`columnName${input.id}`]?.trim(),
+        tasks: boardData?.columns?.find(x => x.id === input.id)?.tasks || [],
+      }))
+      .filter(column => column.name !== ""); // Boş olanları çıkar
+
+    // Güncellenmiş board verisini kaydet
     const updatedData = data.boards.map((board) =>
       board.id === selectedBoardId
-        ? { ...board, columns: updatedColumns }
+        ? { ...board, columns: validColumns }
         : board
     );
 
     setData({ ...data, boards: updatedData });
+
     resetRef.current.reset();
     if (onClose) onClose();
     toast.success("New column added successfully!");
   }
 
-  // dialog içindeki columnu silme
 
+  // dialog içindeki columnu silme
   function removeColumn(id) {
     setInputs(inputs.filter((input) => input.id !== id));
   }

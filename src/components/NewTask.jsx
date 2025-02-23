@@ -49,6 +49,10 @@ export default function NewTask({ onClose }) {
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
 
+    if (currentBoard.columns.length === 0) {
+      return toast.error("You need to create a column first.");
+    }
+
     formObj.id = crypto.randomUUID(); // Yeni görev için benzersiz bir id
     formObj.subtasks = columns.map((title) => ({ title, isCompleted: false }));
     formObj.status = selectedStatus;

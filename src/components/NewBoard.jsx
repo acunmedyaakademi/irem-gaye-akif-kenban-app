@@ -8,20 +8,18 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
   const [boardName, setBoardName] = useState("");
   const [columns, setColumns] = useState([]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-  }
-
- // Dialog içindeki input alanı ekle
+  // Dialog içindeki input alanı ekle
   function addColumn() {
-    setColumns([...columns, ""]);
+    setColumns(prevColumns => [...prevColumns, ""]);
     console.log(columns)
   }
 
   function handleAddColumn(i, value) {
-    const newColumns = [...columns];
-    newColumns[i] = value;
-    setColumns(newColumns)
+    setColumns(prevColumns => {
+      const newColumns = [...prevColumns];
+      newColumns[i] = value;
+      return newColumns;
+    });
   }
 
   // Dialog içindeki input alanını silme
@@ -31,36 +29,49 @@ export default function NewBoard({ onClose, isNewBoardDialogOpen, setIsNewBoardD
   };
 
   function createBoard() {
-    if (!boardName.trim()) return;
+    const validColumns = columns
+      .map(name => name.trim())
+      .filter(name => name !== "");
+
+    if (!boardName.trim() || validColumns.length === 0) {
+      toast.error("Board name and at least one valid column are required!");
+      return;
+    }
 
     const newBoard = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       name: boardName,
-      columns: columns.map(name => ({ id: Date.now() + Math.random(), name, tasks: [] }))
+      columns: validColumns.map(name => ({
+        id: crypto.randomUUID(), // Benzersiz ID
+        name,
+        tasks: [],
+      })),
     };
 
     setData({ ...data, boards: [...data.boards, newBoard] });
     setActiveBoard(boardName);
     setIsNewBoardDialogOpen(false);
     toast.success("Board added successfully!");
-  };
+  }
+
+
 
   return (
     <>
       <div className="new-board-container">
         <h2>Add New Board</h2>
-        <form>
+        <form autoComplete="off">
           <div className="board-name-area">
             <label htmlFor="name">Board Name</label>
             <div>
-              <input type="text" name="name" placeholder="e.g. Web Design" value={boardName} onChange={(e) => setBoardName(e.target.value)} />
+              <input type="text" name="boardname" placeholder="e.g. Web Design" value={boardName} onChange={(e) => setBoardName(e.target.value)} required />
             </div>
           </div>
           <div className="column-area">
             <label htmlFor="columns">Board Columns</label>
             {columns.map((column, index) => (
               <div className="flex" key={index}>
-                <input type="text" name="columns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} />
+                <input type="text" name="boardcolumns" value={column} onChange={(e) => handleAddColumn(index, e.target.value)} required />
                 <img onClick={() => removeColumn(index)} src="/assets/images/cancel-icon.svg" />
               </div>
             ))}

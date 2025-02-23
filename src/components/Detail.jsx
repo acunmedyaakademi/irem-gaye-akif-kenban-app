@@ -112,6 +112,7 @@ export default function Detail({ onClose, openNewTaskDialog, setIsDetailDialogOp
     });
 
     setData(updatedData);
+    toast.success("Subtask status changed successfully.");
   }
 
   return (

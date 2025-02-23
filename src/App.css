@@ -823,13 +823,13 @@
   input:focus {
     border: 1px solid #635FC7;
   }
- 
 }
 
 .new-board {
   display: flex;
   align-items: center;
   padding-left: 24px;
+  padding-top: 14px;
   span {
     color: rgba(99, 95, 199, 1);
     font-weight: 700;
@@ -868,7 +868,11 @@
 
 .addnewcolumn {
   color: rgba(99, 95, 199, 1);
-  background-color: white;
+  background-color: #635FC71A;
+}
+
+.addnewcolumn:hover {
+  background-color: #635FC740;
 }
 
 .createnewboard {
@@ -1063,11 +1067,22 @@
     display: flex;
     align-items: center;
     gap: 15.76px;
-    padding-block: 28px;
+    padding-block: 0;
+
   }
 
   .header {
     border-bottom: 1px solid #3E3F4E;
+  }
+
+  .tablet-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(62, 63, 78, 1);;
+    height: 81px;
+    width: 244px;
+    padding-left: 15px;
   }
 
   /* irem baslangıc */
@@ -1247,7 +1262,6 @@
     letter-spacing: 0px;
     color: #fff;
     padding-left: 24px;
-    border-left: 1px solid #3E3F4E;
   }
 
   .delete-dialog-actions {
@@ -1285,5 +1299,15 @@
     ul {
       padding-right: 24px;
     }
+  }
+
+  .tablet-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(62, 63, 78, 1);;
+    height: 81px;
+    width: 284px;
+    padding-left: 15px;
   }
 }

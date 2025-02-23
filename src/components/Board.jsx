@@ -26,6 +26,24 @@ export default function Board() {
   const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
   const [isNewBoardDialogOpen, setIsNewBoardDialogOpen] = useState(false);
   const { theme, toggleTheme } = useTheme(); // Tema durumu
+  const dropdownRef = useRef(null); // edit delete board dropdown menüsü için
+
+  // Task dropdown menünün menü dışına tıklanınca da kapanması için
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current && // dropdown varsa açıldıysa
+        !dropdownRef.current.contains(event.target) && // dropdown dışında bir yere tıklandıysa
+        !event.target.closest(".task-dropdown") // tıklanan öğenin üst elementlerinden biri task-dropdown değilse
+        // yani dropdown içine tıklanmadıysa durumunun kontrolü
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const [statuses, setStatuses] = useState([]);
   useEffect(() => {
@@ -130,9 +148,11 @@ export default function Board() {
     setIsNewTaskDialogOpen(true);
   };
 
-  const openNewBoardDialog = () => {
-    setIsNewBoardDialogOpen(true);
-  };
+  // create new board butonuna basıldığında dialogun kapanması ve new board modalın açılması için
+  function handleCreateBoardClick() {
+    dialogRef.current.close(); // all boards dialogunu kapat
+    setIsNewBoardDialogOpen(true); // new board modalını aç
+  }
 
   const openAddColumnDialog = () => {
     setIsColumnDialogOpen(true);
@@ -146,22 +166,23 @@ export default function Board() {
     });
 
     setData({ ...data, boards: updatedBoards });
-
   };
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <header className="header">
         <div className="header-logo-area">
-          <div className="header-logo">
-            <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
-          </div>
-          <div className="kanban-logo">
-            {isDesktop && (
-              theme === "light"
-                ? <img src="svg/dark-kanban.svg" alt="" />
-                : <img src="svg/light-kanban.svg" alt="" />
-            )}
+          <div className="tablet-logo">
+            <div className="header-logo">
+              <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
+            </div>
+            <div className="kanban-logo">
+              {isDesktop && (
+                theme === "light"
+                  ? <img src="svg/dark-kanban.svg" alt="" />
+                  : <img src="svg/light-kanban.svg" alt="" />
+              )}
+            </div>
           </div>
           <div className="active-board-name">
             <h3>{isDesktop && activeBoard}</h3>
@@ -195,7 +216,7 @@ export default function Board() {
               </ul>
               <div className="new-board" style={{ color: "#6c5ce7" }}>
                 <BoardSvg />
-                <span onClick={() => setIsNewBoardDialogOpen(true)}>+ Create New Board</span>
+                <span onClick={handleCreateBoardClick}>+ Create New Board</span>
               </div>
               {isDesktop ?
                 <>
@@ -204,6 +225,7 @@ export default function Board() {
                       <img src="/svg/moon-icon-kanban.svg" alt="Moon Icon" />
                       <input
                         className="switch"
+                        name="theme-switch"
                         type="checkbox"
                         defaultChecked={theme === "light"}
                         onChange={toggleTheme}
@@ -249,7 +271,7 @@ export default function Board() {
             {isDesktop && <span>Add New Task</span>}
           </button>
 
-          <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
+          <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon" ref={dropdownRef}>
             <SettingSvg />
           </div>
 

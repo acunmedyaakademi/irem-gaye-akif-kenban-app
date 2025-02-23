@@ -20,9 +20,12 @@ body.light {
   border-radius: 4px;
 }
 
+.light .tablet-logo {
+  border-right: 1px solid rgba(228, 235, 250, 1);
+}
+
 .light .active-board-name h3 {
   color: #000112;
-  border-left: 1px solid #E4EBFA;
 }
 
 .light .dropdown-btn {
