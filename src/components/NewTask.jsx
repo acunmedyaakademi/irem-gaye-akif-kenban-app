@@ -153,7 +153,9 @@ export default function NewTask({ onClose }) {
             defaultValue={currentTask ? currentTask.title : ""}
             name="title"
             placeholder="e.g. Take coffee break"
+            required
           />
+          <span className="error-message">Can’t be empty</span>
         </div>
         <div className="newtask-description-section">
           <h4>Description</h4>
@@ -161,7 +163,9 @@ export default function NewTask({ onClose }) {
             name="description"
             defaultValue={currentTask ? currentTask.description : ""}
             placeholder="e.g. It’s always good to take a break."
+            required
           ></textarea>
+          <span className="error-message">Can’t be empty</span>
         </div>
         <div className="newtask-subtasks-section">
           <h4>Subtasks</h4>

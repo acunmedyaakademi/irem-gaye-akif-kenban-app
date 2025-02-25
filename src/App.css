@@ -23,6 +23,27 @@
   scrollbar-width: thin;
 }
 
+input + span,
+textarea + span {
+  display: none;
+}
+
+input:user-invalid,
+textarea:user-invalid {
+  border: 1px solid #EA5555 !important;
+}
+
+input:user-invalid + span,
+textarea:user-invalid + span {
+  display: inline;
+  color: #EA5555;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: right;
+}
+
 /* Header */
 .header {
   display: flex;
