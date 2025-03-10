@@ -1,18 +1,31 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { DownSvg, PlusSvg, SettingSvg, BoardSvg, HideSidebarSvg, EyeSvg } from "../Svg";
+import {
+  DownSvg,
+  PlusSvg,
+  SettingSvg,
+  BoardSvg,
+  HideSidebarSvg,
+  EyeSvg,
+} from "../Svg";
 import { TaskContext } from "./TaskContext";
 import DropdownMenu from "./DropDownMenu";
 import DeleteDialog from "./DeleteDialog";
 import EditBoardDialog from "./EditBoardDialog";
-import NewColumn from "./NewColumn"; 
+import NewColumn from "./NewColumn";
 import Detail from "./Detail"; // Detail bileşenini dahil ettik
 import NewTask from "./NewTask"; // Yeni görev bileşenini dahil ettik
 import { useTheme } from "./ThemeContext"; // Theme context import edildi
 import "/style/lightMode.css";
+import { createClient } from "@supabase/supabase-js";
 
+const supabase = createClient(
+  "https://gpkftyapxtztltvehqbb.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdwa2Z0eWFweHR6dGx0dmVocWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA4MTkzNjQsImV4cCI6MjA1NjM5NTM2NH0.PgVExJyOvSmz3eIgLAmDqyKSU5LQauoFFiB_HJz5h6M"
+);
 
 export default function Board() {
-  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } = useContext(TaskContext);
+  const { data, setData, isEdit, setEdit, currentTask, setCurrentTask } =
+    useContext(TaskContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,7 +34,7 @@ export default function Board() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false); // Detail Modal durumu
   const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false); // New Task Dialog durumu
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isColumnDialogOpen,setIsColumnDialogOpen] = useState(false)
+  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
   const { theme, toggleTheme } = useTheme(); // Tema durumu
 
   if (!data) return <div>Loading...</div>;
@@ -69,7 +82,9 @@ export default function Board() {
     }
   };
 
-  const currentBoard = boards.find((board) => board.name === activeBoard) || { columns: [] };
+  const currentBoard = boards.find((board) => board.name === activeBoard) || {
+    columns: [],
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -83,18 +98,20 @@ export default function Board() {
     setIsDeleteDialogOpen(true);
   };
 
-
   const onConfirm = () => {
-    const updatedBoards = data.boards.filter((board) => board.name !== activeBoard);
+    const updatedBoards = data.boards.filter(
+      (board) => board.name !== activeBoard
+    );
     setData({ ...data, boards: updatedBoards });
-    setActiveBoard(updatedBoards.length > 0 ? updatedBoards[0].name : "Platform Launch");
+    setActiveBoard(
+      updatedBoards.length > 0 ? updatedBoards[0].name : "Platform Launch"
+    );
     setIsDeleteDialogOpen(false);
   };
 
   const onCancel = () => {
     setIsDeleteDialogOpen(false);
   };
-
 
   // Task detail dialogunu açma fonksiyonu
   const openDetailDialog = (task) => {
@@ -109,33 +126,39 @@ export default function Board() {
 
   const openAddColumnDialog = () => {
     setIsColumnDialogOpen(true);
+  };
+  const addNewColumnToBoard = (newColumn) => {
+    const updatedBoards = data.boards.map((board) => {
+      if (board.name === activeBoard) {
+        return { ...board, columns: [...board.columns, newColumn] };
+      }
+      return board;
+    });
+
+    setData({ ...data, boards: updatedBoards });
+  };
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
   }
-const addNewColumnToBoard = (newColumn) => {
-  const updatedBoards = data.boards.map((board) => {
-    if (board.name === activeBoard) {
-      return { ...board, columns: [...board.columns, newColumn] };
-    }
-    return board;
-  });
-
-  setData({ ...data, boards: updatedBoards });
-
-};
-
 
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <header className="header">
         <div className="header-logo-area">
           <div className="header-logo">
-            <img src="svg/platform-launch-icon.svg" alt="Platform Launch Icon" />
+            <img
+              src="svg/platform-launch-icon.svg"
+              alt="Platform Launch Icon"
+            />
           </div>
           <div className="kanban-logo">
-            {isDesktop && (
-              theme === "light"
-                ? <img src="svg/dark-kanban.svg" alt="" />
-                : <img src="svg/light-kanban.svg" alt="" />
-            )}
+            {isDesktop &&
+              (theme === "light" ? (
+                <img src="svg/dark-kanban.svg" alt="" />
+              ) : (
+                <img src="svg/light-kanban.svg" alt="" />
+              ))}
           </div>
           <div className="active-board-name">
             <h3>{isDesktop && activeBoard}</h3>
@@ -144,7 +167,9 @@ const addNewColumnToBoard = (newColumn) => {
 
         {!isSidebarOpen && ( // Sidebar kapalıyken butonu göster
           <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
-            <span className="open-sidebar"><EyeSvg /></span>
+            <span className="open-sidebar">
+              <EyeSvg />
+            </span>
           </button>
         )}
 
@@ -157,11 +182,19 @@ const addNewColumnToBoard = (newColumn) => {
               </span>
             </button>
 
-            <dialog ref={dialogRef} className="dropdown-menu" onClick={handleDialogClick}>
+            <dialog
+              ref={dialogRef}
+              className="dropdown-menu"
+              onClick={handleDialogClick}
+            >
               <p className="menu-title">All Boards ({boards.length})</p>
               <ul>
                 {boards.map((board) => (
-                  <li key={board.id} className={activeBoard === board.name ? "active" : ""} onClick={() => handleBoardClick(board.name)}>
+                  <li
+                    key={board.id}
+                    className={activeBoard === board.name ? "active" : ""}
+                    onClick={() => handleBoardClick(board.name)}
+                  >
                     <BoardSvg />
                     {board.name}
                   </li>
@@ -173,7 +206,7 @@ const addNewColumnToBoard = (newColumn) => {
                   <span>+ Create New Board</span>
                 </a>
               </div>
-              {isDesktop ?
+              {isDesktop ? (
                 <>
                   <div className="sidebar-footer">
                     <label className="theme-switch">
@@ -190,9 +223,10 @@ const addNewColumnToBoard = (newColumn) => {
                       <HideSidebarSvg />
                       <span>Hide Sidebar</span>
                     </button>
+                    <button onClick={handleLogout}>Çıkış yap</button>
                   </div>
                 </>
-                :
+              ) : (
                 <>
                   <label className="theme-switch">
                     <img src="/svg/moon-icon-kanban.svg" alt="Moon Icon" />
@@ -205,12 +239,10 @@ const addNewColumnToBoard = (newColumn) => {
                     <img src="/svg/sun-icon-kanban.svg" alt="Sun Icon" />
                   </label>
                 </>
-              }
-
+              )}
             </dialog>
           </div>
         </div>
-
 
         <div className="btns-area">
           <button
@@ -225,13 +257,19 @@ const addNewColumnToBoard = (newColumn) => {
             {isDesktop && <span>Add New Task</span>}
           </button>
 
-          <div onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="setting-icon">
+          <div
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="setting-icon"
+          >
             <SettingSvg />
           </div>
 
           {isDropdownOpen && (
             <div className="task-dropdown">
-              <button className="task-dropdown-item" onClick={() => setIsEditDialogOpen(true)}>
+              <button
+                className="task-dropdown-item"
+                onClick={() => setIsEditDialogOpen(true)}
+              >
                 Edit Board
               </button>
               <button className="task-dropdown-item delete" onClick={onDelete}>
@@ -244,7 +282,10 @@ const addNewColumnToBoard = (newColumn) => {
             <div className="dialog-overlay">
               <div className="delete-dialog">
                 <h3>Delete this board?</h3>
-                <p>Are you sure you want to delete the board? This action cannot be undone.</p>
+                <p>
+                  Are you sure you want to delete the board? This action cannot
+                  be undone.
+                </p>
                 <div className="delete-dialog-actions">
                   <button className="delete-dialog-delete" onClick={onConfirm}>
                     Delete
@@ -271,31 +312,42 @@ const addNewColumnToBoard = (newColumn) => {
       </div>
 
       <div className={`board-content ${isSidebarOpen ? "with-sidebar" : ""}`}>
-        {currentBoard && currentBoard.columns && currentBoard.columns.length > 0 ? (
+        {currentBoard &&
+        currentBoard.columns &&
+        currentBoard.columns.length > 0 ? (
           <>
-          <div key={currentBoard.id} className="board-columns">
-            {currentBoard.columns.map((column) => (
-              <div key={column.id} className="board-column">
-                
-                <h3 className="sda"><span className="asd"></span>{column.name}({column.tasks.length})</h3>
-                <div className="tasks">
-                  
-                  {column.tasks.map((task) => {
-                    const activetasks = task.subtasks.filter((x) => x.isCompleted).length;
-                    return (
-                      <div key={task.id} className="task-card" onClick={() => openDetailDialog(task)}>
-                        <h4>{task.title}</h4>
-                        <h6>
-                          {activetasks} of {task.subtasks.length} subtasks
-                        </h6>
-                      </div>
-                    );
-                  })}       
+            <div key={currentBoard.id} className="board-columns">
+              {currentBoard.columns.map((column) => (
+                <div key={column.id} className="board-column">
+                  <h3 className="sda">
+                    <span className="asd"></span>
+                    {column.name}({column.tasks.length})
+                  </h3>
+                  <div className="tasks">
+                    {column.tasks.map((task) => {
+                      const activetasks = task.subtasks.filter(
+                        (x) => x.isCompleted
+                      ).length;
+                      return (
+                        <div
+                          key={task.id}
+                          className="task-card"
+                          onClick={() => openDetailDialog(task)}
+                        >
+                          <h4>{task.title}</h4>
+                          <h6>
+                            {activetasks} of {task.subtasks.length} subtasks
+                          </h6>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-            <button onClick={openAddColumnDialog} className="new-column">NewColumn</button>
-          </div>
+              ))}
+              <button onClick={openAddColumnDialog} className="new-column">
+                NewColumn
+              </button>
+            </div>
           </>
         ) : (
           <div className="empty-board-message">No columns available</div>
@@ -303,7 +355,10 @@ const addNewColumnToBoard = (newColumn) => {
       </div>
 
       {isNewTaskDialogOpen && (
-        <div className="new-task-modal-overlay" onClick={() => setIsNewTaskDialogOpen(false)}>
+        <div
+          className="new-task-modal-overlay"
+          onClick={() => setIsNewTaskDialogOpen(false)}
+        >
           <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
             <NewTask onClose={() => setIsNewTaskDialogOpen(false)} />
           </div>
@@ -311,21 +366,33 @@ const addNewColumnToBoard = (newColumn) => {
       )}
 
       {isDetailDialogOpen && (
-        <div className="detail-modal-overlay" onClick={() => setIsDetailDialogOpen(false)}>
+        <div
+          className="detail-modal-overlay"
+          onClick={() => setIsDetailDialogOpen(false)}
+        >
           <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
-            <Detail onClose={() => setIsDetailDialogOpen(false)} openNewTaskDialog={openNewTaskDialog} setIsDetailDialogOpen={setIsDetailDialogOpen} />
+            <Detail
+              onClose={() => setIsDetailDialogOpen(false)}
+              openNewTaskDialog={openNewTaskDialog}
+              setIsDetailDialogOpen={setIsDetailDialogOpen}
+            />
           </div>
         </div>
       )}
 
       {isColumnDialogOpen && (
-        <div className="new-task-modal-overlay" onClick={() => setIsColumnDialogOpen(false)}>
+        <div
+          className="new-task-modal-overlay"
+          onClick={() => setIsColumnDialogOpen(false)}
+        >
           <div className="new-task-modal" onClick={(e) => e.stopPropagation()}>
-            <NewColumn onClose={() => setIsColumnDialogOpen(false)} addNewColumnToBoard={addNewColumnToBoard} />
+            <NewColumn
+              onClose={() => setIsColumnDialogOpen(false)}
+              addNewColumnToBoard={addNewColumnToBoard}
+            />
           </div>
         </div>
       )}
-
     </div>
   );
 }
